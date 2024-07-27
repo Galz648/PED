@@ -1,0 +1,22 @@
+{
+  "name": "ped",
+  "version": "1.0.0",
+  "description": "An editor for solving physics homework",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc index.ts --outDir dist && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galz648/PED.git"
+  },
+  "author": "Zafargal@gmail.com nilnil47@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/galz648/PED/issues"
+  },
+  "homepage": "https://github.com/galz648/PED#readme",
+  "dependencies": {
+    "typescript": "^5.5.4"
+  }
+}
