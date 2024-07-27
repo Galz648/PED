@@ -1,10 +1,7 @@
 
 import { assertEqual } from "./lib/utils"
 import { GrammerValidator } from "./lib/grammer_validator";
-import { lex, splitString, TOKENS } from "./lib/lexer";
-
-
-
+import { Lexer, TOKENS } from "./lib/lexer";
 
 
 function run_test_cases() {
@@ -42,18 +39,19 @@ function run_test_cases() {
 
 function validate_expression(expr: string) {
     // tokenize
-
     let tokens: string[] = [TOKENS.START];
+    let lexer = new Lexer(tokens)
+
 
     // Example usage:
-    const result = splitString(expr);
+    const result = Lexer.splitString(expr);
     console.log(result);
-    tokens = lex(result, tokens)
+    tokens = lexer.lex(result)
 
     tokens.push(TOKENS.EOF); // add end token
     console.log("tokens:", tokens)
     // validate
-    let validator = new GrammerValidator(tokens)
+    let validator = new GrammerValidator(lexer)
 
     const is_valid = validator.validate();
     return is_valid;
