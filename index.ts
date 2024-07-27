@@ -25,7 +25,6 @@ function my_includes(l: any[], item: any) { //TODO: move to utils
 }
 
 // TOKENS
-type Token = 'DIV' | 'MULT' | 'ADD' | 'SUB'; // Define your token types
 const SPACE_TOKEN = "SPACE_TOKEN"
 const SYMBOL = "SYMBOL"
 const START = "START"
@@ -119,27 +118,29 @@ class GrammerValidator {
         if (next_token === SYMBOL) {
             this.consume_token()
             // return SYMBOL
+        } else {
+            this.error(`token: "${next_token}" != SYMBOL`)
         }
-        this.error(`token: "${next_token}" != SYMBOL`)
-
     }
     get_next_token() { // move to the lexer
-        const next_token = this.tokens[this.current_index + 1];
+        this.current_index += 1 // TODO: is this neccesary?
+        const next_token = this.tokens[this.current_index];
         if (!(next_token === undefined)) {
             return next_token
         }
-        throw new Error("")
+        throw new Error("Reached EOF Token")
     }
     expr() {
         this.factor()
+        console.log(`this.current_token: ${this.current_token}`)
+        // const next_token = this.get_next_token();
+        // console.log(`next token: ${next_token}`)
+
         // validate the type
-        while (this.isToken(this.get_next_token(), ["ADD", "SUB"])) {
-            this.consume_token()
+        while (this.isToken(this.current_token, [BIN_OP.MINUS, BIN_OP.PLUS])) {
+            console.log(`inside loop - this.current_token: ${this.current_token}`)
             this.factor()
         }
-        // else {
-        //     throw Error(`Parse error: Token ${token} is not equal to "SYMBOL"`)
-        // }
 
     }
 
@@ -169,14 +170,14 @@ function run_test_cases() {
             expr: "A -",
             expected: false
         },
-        // {
-        //     expr: "A + A",
-        //     expected: true
-        // },
-        // {
-        //     expr: "A + + A + +",
-        //     expected: false
-        // },
+        {
+            expr: "A + A",
+            expected: true
+        },
+        {
+            expr: "A + + A + +",
+            expected: false
+        },
     ];
 
     expressions.forEach((item) => {
