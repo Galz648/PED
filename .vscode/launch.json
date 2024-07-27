@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Edge against localhost",
+      "url": "file:////Users/neildotan/Documents/GitHub/PED/index.html",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
