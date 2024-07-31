@@ -2,6 +2,7 @@
   "name": "ped",
   "version": "1.0.0",
   "description": "An editor for solving physics homework",
+  "type": "module",
   "scripts": {
     "start:editor": "tsc watch.ts --outDir dist && node watch.js",
     "watch:editor": "tsc -w index.ts watch.ts --outDir ./public/ & node public/watch.js",
