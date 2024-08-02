@@ -1,11 +1,12 @@
 
-import { my_includes } from "./utils"
-import { TOKENS, BIN_OP, Lexer } from "./lexer"
+import { my_includes } from "./utils.js"
+import { TOKENS, BIN_OP, Lexer } from "./lexer.js"
 export class GrammerValidator {
 
     // Grammer:
-    // EXPR: factor ((+ | -) factor)*
-    // factor: SYMBOL
+    // EXPR: TERM ( + | - ) TERM)*
+    // TERM: BET ( / | * ) BET)*
+    // BET: factor ** factor
 
     // EXAMPLE: 2 + 3 * 4
 
@@ -28,8 +29,20 @@ export class GrammerValidator {
         }
     }
 
-    expr() {
+    term() {
         this.factor()
+        console.log(`this.current_token: ${this.lexer.current_token}`)
+
+
+        // validate the type
+        while (this.lexer.isToken(this.lexer.current_token, [BIN_OP.MULT, BIN_OP.DIV])) {
+            console.log(`inside loop - this.current_token: ${this.lexer.current_token}`)
+            this.factor()
+        }
+
+    }
+    expr() {
+        this.term()
         console.log(`this.current_token: ${this.lexer.current_token}`)
         // const next_token = this.get_next_token();
         // console.log(`next token: ${next_token}`)
@@ -37,13 +50,12 @@ export class GrammerValidator {
         // validate the type
         while (this.lexer.isToken(this.lexer.current_token, [BIN_OP.MINUS, BIN_OP.PLUS])) {
             console.log(`inside loop - this.current_token: ${this.lexer.current_token}`)
-            this.factor()
+            this.term()
         }
 
     }
 
     validate(): Boolean {
-
         try {
             this.expr()
             return true;

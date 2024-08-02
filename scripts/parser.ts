@@ -1,7 +1,7 @@
 
-import { assertEqual } from "./lib/utils"
-import { GrammerValidator } from "./lib/grammer_validator";
-import { Lexer, TOKENS } from "./lib/lexer";
+import { assertEqual } from "../src/lib/utils.js"
+import { GrammerValidator } from "../src/lib/grammer_validator.js";
+import { Lexer, TOKENS } from "../src/lib/lexer.js";
 
 
 function run_test_cases() {
@@ -27,10 +27,12 @@ function run_test_cases() {
         //     expected: false
         // },
         {
-            expr: "A ** A +",
-            expected: true
+            expr: "A + A +",
+            expected: false
         },
     ];
+
+
 
     expressions.forEach((item) => {
         const expr: string = item.expr;
@@ -42,23 +44,14 @@ function run_test_cases() {
 
 
 function validate_expression(expr: string) {
-    // tokenize
-    let tokens: string[] = [TOKENS.START];
-    let lexer = new Lexer(tokens)
 
-
-    // Example usage:
-    const result = Lexer.splitString(expr);
-    console.log(result);
-    tokens = lexer.lex(result)
-
-    tokens.push(TOKENS.EOF); // add end token
-    console.log("tokens:", tokens)
-    // validate
-    let validator = new GrammerValidator(lexer)
-
-    const is_valid = validator.validate();
+    const lexer = new Lexer();
+    const gv = new GrammerValidator(lexer)
+    console.log("tokens:", gv.lexer.get_tokens())
+    const is_valid = gv.validate();
     return is_valid;
+
+
 }
 function main() {
     run_test_cases()

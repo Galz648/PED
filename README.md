@@ -21,6 +21,14 @@
    ```
 
 
+# TODOs:
+* create a clean setup of the repo, to create examples in different branches - low priority
+* split the index script into a watch-client file that handle the communication with the wss (websocket server)
+* put all javascript compiled files in the dist folder.
+* add live reloading (cold reload) (file change) (tsc reloads the files) --> ws message --> document reload
+* add hot reloading (learn about the cache and implment it) (file change) --> ws message --> 
+* 
+
 
 
 

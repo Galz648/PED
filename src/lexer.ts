@@ -1,7 +1,8 @@
 
-import { my_includes } from "./utils";
+import { my_includes } from "./utils.js";
 export enum TOKENS {
     // TOKENS
+    INTEGER = "INTEGER",
     SPACE_TOKEN = "SPACE_TOKEN",
     SYMBOL = "SYMBOL",
     START = "START",
@@ -25,16 +26,17 @@ export class Lexer {
     current_index: number;
     tokens: string[]
 
-    constructor(tokens: string[]) {
+    constructor() {
+        this.tokens = [TOKENS.START, TOKENS.EOF];
         this.current_index = 0;
-        this.tokens = tokens;
         this.current_token = this.tokens[this.current_index]
     }
 
     get_next_token() { // move to the lexer
         this.current_index += 1 // TODO: is this neccesary?
         const next_token = this.tokens[this.current_index];
-        if (!(next_token === undefined)) {
+        const not_undefined = !(next_token === undefined)
+        if (not_undefined) {
             return next_token
         }
         throw new Error("Reached EOF Token")
@@ -48,8 +50,7 @@ export class Lexer {
         return my_includes(tokens, value)
     }
 
-    determine_token(char: string) { // TODO: is there a more compatible type for this ?
-
+    static determine_token(char: string) { // TODO: make code more compact, using a mapper ? 
         if (char == BIN_OP.PLUS) {
             return BIN_OP.PLUS;
         }
@@ -77,18 +78,37 @@ export class Lexer {
             throw new Error(`unrecognized token: ${char}`)
         }
     }
-    lex(text: string[]) {
-        text.forEach((c, i) => {
-            let token = this.determine_token(c)
-            this.tokens.push(token);
+
+    get_tokens() {
+        return this.tokens
+    }
+    reset_state() {
+        this.tokens = [TOKENS.START, TOKENS.EOF];
+        this.current_index = 0;
+        this.current_token = this.tokens[this.current_index]
+    }
+
+    lex(text: string) { 
+        const text_as_list = Lexer.splitString(text)
+        const tokens: string[] = []
+
+        text_as_list.forEach((c: string, i) => {
+            let token = Lexer.determine_token(c)
+            tokens.push(token);
         })
-        return this.tokens // TODO: not sure if used
+        this.tokens = tokens
+        this.current_index = 0
+        this.current_token = this.tokens[this.current_index]
     }
 
 
-    static splitString(input: string): string[] {
+    private static splitString(input: string): string[] {
         return input.split(/\s+/);
     }
+
+
+
+
 }
 
 
