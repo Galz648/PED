@@ -6,7 +6,7 @@ export enum TOKENS {
     SPACE_TOKEN = "SPACE_TOKEN",
     SYMBOL = "SYMBOL",
     START = "START",
-    EOF = "EOF"
+    EOF = "EOF",
 }
 export enum BIN_OP { // 
     // Binary Ops
@@ -35,7 +35,7 @@ export class Lexer {
     get_next_token() { // move to the lexer
         this.current_index += 1 // TODO: is this neccesary?
         const next_token = this.tokens[this.current_index];
-        const not_undefined = !(next_token === undefined)
+        const not_undefined = !(next_token == undefined)
         if (not_undefined) {
             return next_token
         }
@@ -88,14 +88,17 @@ export class Lexer {
         this.current_token = this.tokens[this.current_index]
     }
 
-    lex(text: string) { 
+    lex(text: string) {
         const text_as_list = Lexer.splitString(text)
-        const tokens: string[] = []
+        const tokens: string[] = [TOKENS.START];
 
         text_as_list.forEach((c: string, i) => {
             let token = Lexer.determine_token(c)
             tokens.push(token);
         })
+
+        tokens.push(TOKENS.EOF);
+
         this.tokens = tokens
         this.current_index = 0
         this.current_token = this.tokens[this.current_index]

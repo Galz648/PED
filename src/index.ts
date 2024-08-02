@@ -1,5 +1,6 @@
 import { GrammerValidator } from "./grammer_validator.js";
-import { Lexer } from "./lexer.js";
+import { Lexer, TOKENS } from "./lexer.js";
+import { my_includes } from "./utils.js";
 document.addEventListener("DOMContentLoaded", () => {
     const lexer = new Lexer();
     const gv = new GrammerValidator(lexer)
@@ -17,22 +18,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const expr = textarea.value;
         ce_div.innerText = expr;
 
+        try {
+            // reset the lexer state
+            gv.lexer.reset_state()
+            // reset the token display
+            // tokenize expression
 
-        gv.lexer.reset_state()
-        // tokenize expression
-        gv.lexer.lex(expr)
+            gv.lexer.lex(expr)
 
-        // set the tokens display
-        token_display_div.innerText = String(gv.lexer.get_tokens())
+            // set the tokens display
+            token_display_div.innerText = String(gv.lexer.get_tokens())
 
-        const is_valid = gv.validate();
-        console.log(`${expr}: ${is_valid}`)
+            const is_valid = gv.validate();
+            console.log(`${expr}: ${is_valid}`)
 
-        if (is_valid) {
-            textarea.style.backgroundColor = 'darkblue'; // Change the background color to dark green
-        } else {
+            if (is_valid == true) {
+                textarea.style.backgroundColor = 'darkgreen'; // Change the background color to dark green
+            } else {
+
+                textarea.style.backgroundColor = 'darkred'; // Change the background color to dark red
+            }
+        } catch (e) {
+            console.error(e)
             textarea.style.backgroundColor = 'darkred'; // Change the background color to dark red
         }
+
     });
 
     console.log("this should recompile!!")
