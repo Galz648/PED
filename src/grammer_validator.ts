@@ -33,9 +33,9 @@ export class GrammerValidator {
         this.factor()
         console.log(`this.current_token: ${this.lexer.current_token}`)
 
-
+        this.lexer.consume_token()
         // validate the type
-        while (this.lexer.isToken(this.lexer.current_token, [BIN_OP.MULT, BIN_OP.DIV])) {
+        while (this.lexer.isToken(this.lexer.current_token, [BIN_OP.DIV])) {
             console.log(`inside loop - this.current_token: ${this.lexer.current_token}`)
             this.factor()
         }
@@ -46,7 +46,7 @@ export class GrammerValidator {
         console.log(`this.current_token: ${this.lexer.current_token}`)
         // const next_token = this.get_next_token();
         // console.log(`next token: ${next_token}`)
-
+        this.lexer.consume_token()
         // validate the type
         while (this.lexer.isToken(this.lexer.current_token, [BIN_OP.MINUS, BIN_OP.PLUS])) {
             console.log(`inside loop - this.current_token: ${this.lexer.current_token}`)
@@ -56,12 +56,20 @@ export class GrammerValidator {
     }
 
     validate(): Boolean {
+        let really_valid = true;
         try {
             this.expr()
-            return true;
         } catch (e) {
             console.log(e)
-            return false;
+            really_valid = false
+            return really_valid
+        } finally {
+            if (really_valid) {
+                return true
+            }
+            else {
+                return false
+            }
         }
     }
 }
