@@ -18,8 +18,12 @@
 
 
 # TODOs:
-   * fix the parser
-   * 
+   * connect basic new parser (parser combinator) to UI - DONE
+   * append to the parser incrementally
+   * remove all TODOs
+   * better logging of the parser in action
+   * refactoring code to be more functional
+
 
 
 

@@ -114,7 +114,8 @@
   "include": [
     "src/**/*",
     "public/ws-client.ts",
-    "scripts/whatever.ts"
+    "scripts/whatever.ts",
+    "junk/parser_combinator.ts"
   ],
   "exclude": [
     "node_modules",

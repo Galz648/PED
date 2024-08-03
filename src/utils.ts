@@ -1,4 +1,4 @@
-
+import { Tuple } from "./types.js";
 // Helper function to log test results
 export function assertEqual(actual: any, expected: any, message: string): void { //TODO: move to utils
     if (actual === expected) {
@@ -30,3 +30,14 @@ export function reverse(arr: any[]) {
 }
 
 
+export function head(str: string): Tuple<string, string>[] { // TODO: consider changing the name 
+    // Get the first character and the rest of the string
+
+    if (str.length === 0) {
+        return [];
+    }
+
+    const head = str[0];
+    const rest = str.slice(1);
+    return [[head, rest]];
+}
