@@ -1,6 +1,4 @@
-import { GrammerValidator } from "./grammer_validator.js";
-import { Lexer, TOKENS } from "./lexer.js";
-import { my_includes } from "./utils.js";
+
 import { basic_bin_op, parse } from "./parsers.js";
 
 const editorID = "editor";
@@ -70,12 +68,4 @@ function load_state_from_session_storage() {
         load_state_from_session_storage()
 
     }
-
-    function set_textarea_value() {
-        const textarea = document.getElementById(editorID)! as HTMLTextAreaElement;
-        if (sessionStorage.getItem(USER_INPUT_STATE_KEY)) {
-            textarea.value = sessionStorage.getItem(USER_INPUT_STATE_KEY) as string;
-        } else {
-            textarea.value = "";
-        }
-    }   
+ 

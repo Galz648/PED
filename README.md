@@ -18,8 +18,13 @@
 
 
 # TODOs:
-   * connect basic new parser (parser combinator) to UI - DONE
+   * change the type of 
+   * support standalone symbols as valid grammer
+   * add error handling to parse
    * append to the parser incrementally
+   * create listeners for changes in the UI represented through state, and applying the state on the DOM. / come up with an architecture to handle elements in javascript
+   * connect basic new parser (parser combinator) to UI - DONE
+   
    * remove all TODOs
    * better logging of the parser in action
    * refactoring code to be more functional
