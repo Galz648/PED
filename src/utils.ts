@@ -1,4 +1,6 @@
-import { Tuple } from "./types.js";
+
+import { Result, Ok, Err, error, ok } from "./match.js";
+import { ParserCursor, Parser, ParseError } from "./types.js";
 // Helper function to log test results
 export function assertEqual(actual: any, expected: any, message: string): void { //TODO: move to utils
     if (actual === expected) {
@@ -29,15 +31,30 @@ export function reverse(arr: any[]) {
     return reversed
 }
 
-
-export function head(str: string): Tuple<string, string>[] { // TODO: consider changing the name 
+export function head(str: string): Result<string[], ParseError> { // TODO: consider changing the name 
     // Get the first character and the rest of the string
 
     if (str.length === 0) {
-        return [];
+        const parse_error: ParseError = { message: "Error: Empty string", index: 0, input: str };
+        return error<ParseError>(parse_error);
     }
 
     const head = str[0];
     const rest = str.slice(1);
-    return [[head, rest]];
+
+    return ok<string[]>(
+        [head, rest]
+    );
+}
+
+export function findSubstring(original: string, pattern: string): number[] {
+    const regex = new RegExp(pattern, 'g');
+    const matches = [];
+    let match;
+
+    while ((match = regex.exec(original)) !== null) {
+        matches.push(match.index);
+    }
+
+    return matches;
 }
