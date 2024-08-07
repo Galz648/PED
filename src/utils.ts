@@ -42,7 +42,7 @@ export function head(str: string): Result<string[], ParseError> { // TODO: consi
     const head = str[0];
     const rest = str.slice(1);
 
-    return ok<string[]>(
+    return ok<string[]>( // TODO: change to object, instead of array - indices are confusing!
         [head, rest]
     );
 }

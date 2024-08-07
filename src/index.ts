@@ -1,6 +1,6 @@
 import { my_includes } from "./utils.js";
-import { simple_parser } from "./parsers.js";
-import { parse } from "./parser.js";
+import { parser_seq, simple_parser } from "./parsers.js";
+import { parse } from "./parsers.js";
 
 const editorID = "editor";
 const compiledExpressionID = "compiled_expression";
@@ -25,7 +25,7 @@ const textarea_oninput = () => {
     ce_div.innerText = expr;
 
     try {
-        const result = parse(simple_parser, expr);
+        const result = parse(parser_seq, expr);
         token_display_div.innerText = JSON.stringify(result);
     } catch (e) {
         console.error(e)

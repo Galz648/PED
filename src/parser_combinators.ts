@@ -5,21 +5,6 @@ import {
 
 // TODO: remove duplicate type from function declarations
 // TODO: change [] to EmptyTuple in types.ts
-// are these functions pure?
-
-// export function Or(parser1: Parser, parser2: Parser): Parser { // ParserCombinator - TODO: add parser to funtion declaration
-//     return (input: ParserCursor):  => {
-//         const result1 = parser1(str);
-//         match<Result>(result1, (ok) => {
-//         if (result1.value.length > 0) {
-//             return result1;
-//         }
-//         return parser2(str);
-//     },
-//         (err) => { // TODO: there is nothing to do here, since 
-
-//         });
-// }
 
 // rewriting the Or function to use the new Parser type - use the ParserCursor type
 export function Or(parser1: Parser, parser2: Parser): Parser {
@@ -32,51 +17,44 @@ export function Or(parser1: Parser, parser2: Parser): Parser {
     }
 }
 
+export const doSequence = (parsers: Parser[]): Parser => {
+    const wrapped_parser: Parser = (cursor) => {
 
-// export function doSequence<T>(parsers: Parser[]): Parser {
-//     return (input: string): Result => {
-//         let acc = "";
-//         let remainingInput = input; // <- position tracking, create error handling
+        let parsed = "";
+        for (const parser of parsers) {
 
-//         for (const parser of parsers) {
-//             const result = parser(remainingInput);
-//             if (result.length === 0) {
-//                 return [];
-//             }
-//             // console.log(`result: ${result}`);
-//             const [parsedValue, newRemainingInput] = result[0];
-//             acc += parsedValue;
-//             remainingInput = newRemainingInput;
-//         }
+            const result = parser(cursor);
+            if (result.ok) {
+                parsed += result.value.parsed;
+            } else {
+                return error<ParseError>({ message: `doSequence - Error Parsing: ${cursor.remaining}`, index: (cursor.input).indexOf(cursor.remaining), input: cursor.input });
+            }
+        }
+        return ok({ parsed: parsed, remaining: cursor.remaining, input: cursor.input });
+    }
+    return wrapped_parser;
+};
 
-//         // Return the accumulated results and the remaining input
-//         return [acc, remainingInput];
-//     };
-// }
-// export const Some: ParserCombinator = (parser: Parser): Parser => {
-//     return (str: string): Result => {
-//         let should_run = true;
-//         let accumulator: string = ""; // <- position tracking, create error handling
+export const Some: ParserCombinator = (parser: Parser): Parser => {
+    const wrapped_parser: Parser = (cursor) => {
+        let should_run = true;
+        let parsed = "";
 
-//         while (should_run) {
-//             const result = parser(str);
-//             console.log(`Result: ${result}`);
-//             const result_not_empty = result.length > 0;
-//             if (result_not_empty) {
-//                 const tuple: Tuple<string, string> = [result[0]!, result[1]!];
-//                 console.log(`Tuple: ${tuple}`);
-//                 accumulator += result[0]; // TODO: beautify this
-//                 console.log(`Parsing: ${str}  |   Accumulator: ${accumulator}`);
-//                 str = result[1]! // WARNING: ! - 
-//             } else {
-//                 should_run = false;
-//             }
-//         }
+        while (should_run) {
+            console.log("running some");
+            const result = parser(cursor);
+            if (result.ok) {
+                console.log("some result", result);
+                cursor = result.value;
+                parsed += result.value.parsed;
+            } else {
+                should_run = false;
+                return error<ParseError>({ message: `Some - Error Parsing: ${cursor.remaining}`, index: (cursor.input).indexOf(cursor.remaining), input: cursor.input });
+            }
+        }
 
-//         if (accumulator.length > 0) {
-//             return [accumulator, str];
-//         }
-//         return [];
+        return ok({ parsed: parsed, remaining: cursor.remaining, input: cursor.input });
+    }
 
-//     }
-// }
+    return wrapped_parser;
+}
