@@ -37,23 +37,36 @@ export const doSequence = (parsers: Parser[]): Parser => {
 
 export const Some: ParserCombinator = (parser: Parser): Parser => {
     const wrapped_parser: Parser = (cursor) => {
-        let should_run = true;
         let parsed = "";
+        let should_run = true
+        let remaining = cursor.remaining
+        let new_cursor = cursor
 
         while (should_run) {
             console.log("running some");
-            const result = parser(cursor);
+            const result = parser(new_cursor);
             if (result.ok) {
-                console.log("some result", result);
-                cursor = result.value;
-                parsed += result.value.parsed;
-            } else {
-                should_run = false;
-                return error<ParseError>({ message: `Some - Error Parsing: ${cursor.remaining}`, index: (cursor.input).indexOf(cursor.remaining), input: cursor.input });
+                console.log(result.value)
+                parsed += result.value.parsed
+                new_cursor = result.value
+                if (new_cursor.remaining.length == 0) {
+                    should_run = false
+                }
             }
-        }
+            else {
+                return error<ParseError>({
+                    message: `Some - Failed Parsing: ${remaining}`,
+                    index: result.value.index,
+                    input: cursor.input
+                })
+            }
 
-        return ok({ parsed: parsed, remaining: cursor.remaining, input: cursor.input });
+        }
+        return ok({
+            parsed: parsed,
+            remaining: new_cursor.remaining,
+            input: cursor.input
+        });
     }
 
     return wrapped_parser;

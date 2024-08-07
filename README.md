@@ -10,9 +10,7 @@
 * 2 types of hot reloading, one for the state, and one for the code
 
 ## How to Run
-
-1. **First terminal**: Start the TypeScript compiler in watch mode for `index.ts` and `watch.ts` and output to the `public` folder:
-   ```sh
+   ```console
    vite
    ```
 
@@ -25,7 +23,7 @@
    * create listeners for changes in the UI represented through state, and applying the state on the DOM. / come up with an architecture to handle elements in javascript - IN PROGRESS
    * connect basic new parser (parser combinator) to UI - DONE
    * append to the parser incrementally
-   * remove all TODOs
+   * remove all TODconsole
    
    * refactoring code to be more functional
    * could be cool to have an abillity to turn off some of the features, have this be a modular equation editor
