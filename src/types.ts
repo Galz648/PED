@@ -4,11 +4,17 @@ import { Result } from "./match.js"
 export type Tuple<a, b> = [a, b]
 export type EmptyTuple = [];
 
+export interface Node {
+    value: string,
+    type: string,
+    children: Node[] | null
+}
 // after I have a few parsers down with this functionality I could refactor the code to use a more generic type or a macro
 export interface ParserCursor {
     parsed: string
     remaining: string
     input: string
+    AST: Node
 }
 
 

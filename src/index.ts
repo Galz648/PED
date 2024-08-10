@@ -1,6 +1,7 @@
 import { my_includes } from "./utils.js";
-import { parser_seq, simple_parser } from "./parsers.js";
+import { basic_bin_op, parser_seq, simple_parser, term } from "./parsers.js";
 import { parse } from "./parsers.js";
+import { Node } from "./types.js"
 
 const editorID = "editor";
 const compiledExpressionID = "compiled_expression";
@@ -13,6 +14,27 @@ const ce_div = document.getElementById(compiledExpressionID)! as HTMLDivElement;
 const token_display_div = document.getElementById(tokenDisplayID)! as HTMLDivElement;
 
 let valid = null;
+function simpleTermToAST(termNodes: Node[]): Node {
+    try {
+        const operands: Node[] = [termNodes[0], termNodes[2]]
+        const operator: Node = termNodes[1]
+        // converts 
+        console.log([operands[0], operator, operands[1]])
+        const children: any = [operands[0], operands[1]] // TODO: fix type error: Node[][] 
+        return {
+            type: operator.type,
+            value: operator.value,
+            children: children
+        }
+
+    } catch (e) {
+        throw e
+    }
+
+}
+
+const ASTGenerators = new Map<string, Function>()
+ASTGenerators.set("term", simpleTermToAST)
 
 if (!textarea || !ce_div || !token_display_div) {
     throw Error("something went wrong, html elements are missing.")
@@ -25,7 +47,9 @@ const textarea_oninput = () => {
     ce_div.innerText = expr;
 
     try {
-        const result = parse(parser_seq, expr);
+        const result = parse(term, expr);
+        result.ok ? console.log(result.value.AST) : console.log("result not okay")
+        result.ok ? console.log(simpleTermToAST(result.value.AST)) : console.log("generator AST error")
         token_display_div.innerText = JSON.stringify(result);
     } catch (e) {
         console.error(e)
