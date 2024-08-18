@@ -2,9 +2,7 @@
   "name": "ped",
   "version": "1.0.0",
   "description": "An editor for solving physics homework",
-  "scripts": {
-    "watch:editor": ""
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/galz648/PED.git"

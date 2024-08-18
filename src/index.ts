@@ -1,7 +1,12 @@
 import { my_includes } from "./utils.js";
-import { basic_bin_op, parser_seq, simple_parser, term } from "./parsers.js";
+import { parser_seq, simple_parser, alphabet_parser, doSequence, plus_minus_parser } from "./parsers.js";
 import { parse } from "./parsers.js";
-import { Node } from "./types.js"
+import { Node, Parser } from "./types.js"
+import { Some } from "./parser_combinators.js";
+import { root } from "./grammer.js";
+import { json } from "stream/consumers";
+
+
 
 const editorID = "editor";
 const compiledExpressionID = "compiled_expression";
@@ -14,27 +19,6 @@ const ce_div = document.getElementById(compiledExpressionID)! as HTMLDivElement;
 const token_display_div = document.getElementById(tokenDisplayID)! as HTMLDivElement;
 
 let valid = null;
-function simpleTermToAST(termNodes: Node[]): Node {
-    try {
-        const operands: Node[] = [termNodes[0], termNodes[2]]
-        const operator: Node = termNodes[1]
-        // converts 
-        console.log([operands[0], operator, operands[1]])
-        const children: any = [operands[0], operands[1]] // TODO: fix type error: Node[][] 
-        return {
-            type: operator.type,
-            value: operator.value,
-            children: children
-        }
-
-    } catch (e) {
-        throw e
-    }
-
-}
-
-const ASTGenerators = new Map<string, Function>()
-ASTGenerators.set("term", simpleTermToAST)
 
 if (!textarea || !ce_div || !token_display_div) {
     throw Error("something went wrong, html elements are missing.")
@@ -46,14 +30,32 @@ const textarea_oninput = () => {
     const expr = textarea.value;
     ce_div.innerText = expr;
 
+
     try {
-        const result = parse(term, expr);
-        result.ok ? console.log(result.value.AST) : console.log("result not okay")
-        result.ok ? console.log(simpleTermToAST(result.value.AST)) : console.log("generator AST error")
+        // get parser
+        // const top_level_parser = parser_generator.rules.get("statement")! 
+
+        const result = parse(root, expr);
         token_display_div.innerText = JSON.stringify(result);
+
+        console.log(result)
+        if (result.ok && (result.value.remaining.length === 0)) {
+
+            textarea.style.backgroundColor = 'darkgreen';
+        }
+        if (!result.ok) {
+            textarea.style.backgroundColor = 'darkred';
+            throw new Error("result not okay")
+
+        }
+        if (result.ok && result.value.remaining.length > 0) {
+            textarea.style.backgroundColor = 'darkred';
+            throw new Error("inadquate parser for the input or other stuff")
+        }
+
     } catch (e) {
         console.error(e)
-        textarea.style.backgroundColor = 'darkred'; // Change the background color to dark red
+        textarea.style.backgroundColor = 'darkred';
 
     }
 }
@@ -66,6 +68,8 @@ const textarea_oninput = () => {
 document.addEventListener("DOMContentLoaded", () => {
 
     onload(); // hopefully this loads after the dom content is loaded
+
+    const global_AST = []
     textarea.addEventListener("input", textarea_oninput);
 });
 

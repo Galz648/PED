@@ -16,6 +16,7 @@
 
 
 # TODOs:
+   * simplify the stucture of the Node and AST property of the cursor.
    * create listeners for changes in the UI represented through state, and applying the state on the DOM. / come up with an architecture to handle elements in javascript - IN PROGRESS
    * remove all TODOs
    * return an AST inside the result, when parsing the cursor

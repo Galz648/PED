@@ -1,13 +1,48 @@
 
-import { Tuple, Parser, ParseError, ParserCursor } from './types.js';
+import { Tuple, ParseError, ParserCursor } from './types.js';
+import { Parser } from './types.js';
 import { Result, Ok, Err, error, ok } from './match.js';
 import { findSubstring, head } from './utils.js';
 // import { Or, Some, doSequence } from './parser_combinators.js';
 import { doSequence, Or, Some } from './parser_combinators.js';
 
+
 // TODO: Extract parser inner functionality to a function
 // TODO: write function to have a n-ary input for Or
 // Parser that matches a single digit
+
+
+export const literal_parser = (literal: string): Parser => {
+    const _: Parser = (cursor: ParserCursor) => {
+        const result = head(cursor.remaining);
+        // TOOD: figure out the position of the parser at points of failure
+
+        if (result.ok) {
+            const is_pattern = result.value[0] == literal
+            const head_char = result.value[0];
+            const remaining = result.value[1];
+            if (is_pattern) {
+                const literal_node = {
+                    value: head_char,
+                    type: "LiteralNode",
+                    children: null
+                }
+                const c = {
+                    parsed: head_char, remaining: remaining, input: cursor.input, AST:
+                        cursor.AST.push(literal_node)
+                };
+                return ok(c);
+            }
+            else {
+                return error<ParseError>({ message: `Error - Expected Literal "${literal}": ${head_char}`, index: (cursor.input).indexOf(head_char), input: cursor.input });
+            }
+        } else {
+            return result;
+        }
+    }
+    return _
+
+}
 const digit_parser: Parser = (cursor) => {
     const pattern = /^[0-9]/; // Regex to match a single digit
     const result = head(cursor.remaining);
@@ -78,11 +113,11 @@ export const plus_minus_parser: Parser = (cursor) => {
         const is_pattern = pattern.test(head_char)
         if (is_pattern) {
             const c = {
-                parsed: head_char, remaining: new_remaining, input: cursor.input, AST: {
+                parsed: head_char, remaining: new_remaining, input: cursor.input, AST: [{
                     value: head_char,
                     type: head_char == "+" ? "PlusNode" : "MinusNode",
                     children: null
-                }
+                }]
             };
             return ok(c);
         }
@@ -94,7 +129,7 @@ export const plus_minus_parser: Parser = (cursor) => {
     }
 };
 
-const alphabet_parser: Parser = (cursor) => {
+export const alphabet_parser: Parser = (cursor) => {
     const pattern = /^[a-zA-Z]/; // Regex to match a single alphabet letter
     const result = head(cursor.remaining);
 
@@ -105,11 +140,11 @@ const alphabet_parser: Parser = (cursor) => {
         if (is_pattern) {
             console.log(`alphabet parser: remaining - <${remaining}>`)
             const c = {
-                parsed: head_char, remaining: remaining, input: cursor.input, AST: {
+                parsed: head_char, remaining: remaining, input: cursor.input, AST: [{
                     value: head_char,
                     type: "CharNode",
                     children: null
-                }
+                }]
             };
             return ok(c);
         }
@@ -121,27 +156,13 @@ const alphabet_parser: Parser = (cursor) => {
     }
 };
 export const factor = Or(alphabet_parser, digit_parser);
-// export const simple_parser = Some([alphabet_parser, digit_parser]);
-export const term = doSequence([
-    alphabet_parser, plus_minus_parser, alphabet_parser
-])
+
 export const simple_parser = factor
 export const parser_seq = Some(alphabet_parser);
 
 // Combined factor parser for digits and alphabet characters
 
 
-// Basic binary operation parser
-export const basic_bin_op = Or(
-    doSequence([
-        factor,
-        Some(
-            Or(plus_minus_parser, white_space_parser)
-        ),
-        factor
-    ]),
-    factor
-);
 
 // export const simple_parser = Some(
 //     Or(
@@ -156,11 +177,11 @@ export function parse(parser: Parser, str: string): Result<ParserCursor, ParseEr
             parsed: "",
             input: str,
             remaining: str,
-            AST: {
-                type: "ROOT",
+            AST: [{
+                type: parser.name,
                 value: "",
                 children: []
-            }
+            }]
         }
 
         const result = parser(ci);
@@ -171,3 +192,66 @@ export function parse(parser: Parser, str: string): Result<ParserCursor, ParseEr
 
 
 }
+export const mult_div_parser: Parser = (cursor) => {
+    const pattern = /^[*/]/; // Regex to match a single digit
+    const result = head(cursor.remaining);
+    // TOOD: figure out the position of the parser at points of failure
+
+    if (result.ok) {
+        const is_pattern = pattern.test(result.value[0])
+        const head_char = result.value[0];
+        const remaining = result.value[1];
+        if (is_pattern) {
+            const c = {
+                parsed: head_char, remaining: remaining, input: cursor.input, AST: [{
+                    value: head_char,
+                    type: "BinOpNode",
+                    children: null
+                }]
+            };
+            return ok(c);
+        }
+        else {
+            return error<ParseError>({ message: `Error Parsing (* | /): ${head_char}`, index: (cursor.input).indexOf(head_char), input: cursor.input });
+        }
+    } else {
+        return result;
+    }
+}
+const eq_parser: Parser = (cursor) => {
+    const pattern = /^=/; // Regex to match a single digit
+    const result = head(cursor.remaining);
+    // TOOD: figure out the position of the parser at points of failure
+
+    if (result.ok) {
+        const is_pattern = pattern.test(result.value[0])
+        const head_char = result.value[0];
+        const remaining = result.value[1];
+        if (is_pattern) {
+            const c = {
+                parsed: head_char, remaining: remaining, input: cursor.input, AST: [{
+                    value: head_char,
+                    type: "KEYWORD",
+                    children: null
+                }]
+            };
+            return ok(c);
+        }
+        else {
+            return error<ParseError>({ message: `Error Parsing EQ: ${head_char}`, index: (cursor.input).indexOf(head_char), input: cursor.input });
+        }
+    } else {
+        return result;
+    }
+};
+
+
+export { doSequence };
+
+
+export const left_paran_parser = literal_parser("(")
+export const right_paran_parser = literal_parser("(")
+
+// Grammer rules as parser combinators
+
+
