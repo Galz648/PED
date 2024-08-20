@@ -11,18 +11,6 @@ export function assertEqual(actual: any, expected: any, message: string): void {
     }
 }
 
-
-export function my_includes(l: any[], item: any) { //TODO: change name
-    let is_equal = false;
-    l.forEach((i) => {
-        if (i === item) {
-            is_equal = true
-        }
-    })
-
-    return is_equal;
-}
-
 export function reverse(arr: any[]) {
     const reversed: any[] = [];
     for (let step = -1; step > -arr.length + 1; step--)
@@ -35,7 +23,7 @@ export function head(str: string): Result<string[], ParseError> { // TODO: consi
     // Get the first character and the rest of the string
 
     if (str.length === 0) {
-        const parse_error: ParseError = { message: "Error: Empty string", index: 0, input: str };
+        const parse_error: ParseError = { message: "Error: Empty string", index: 0, input: str , "name" : "head" }; 
         return error<ParseError>(parse_error);
     }
 

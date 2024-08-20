@@ -1,8 +1,8 @@
 
+import { Expression } from "./grammer.js"
 import { Result } from "./match.js"
 // TODO: separate into different files
-export type Tuple<a, b> = [a, b]
-export type EmptyTuple = [];
+
 
 export interface Node {
     value: string,
@@ -14,18 +14,18 @@ export interface ParserCursor {
     parsed: string
     remaining: string
     input: string
-    AST: Node
+    AST : any[] // TODO: change any type to a more specific type
 }
 
 
 
-export type Parser = (input: ParserCursor) => Result<ParserCursor, ParseError>; // TODO: change any type to a more specific type
-export type ParserCombinator = (parser: Parser) => Parser;
+export type Parser<T> = (input: ParserCursor) => Result<ParserCursor, ParseError>; // TODO: change any type to a more specific type
+export type ParserCombinator = <T,U>(parser: Parser<T>) => Parser<U>;
 // export type Ok = { kind: "ok", value: string };
 // export interface Err { kind: "err", message: string, pos: number };
 
 
-export interface ParseError { // TODO: should this extend Error?
+export interface ParseError extends Error { // TODO: should this extend Error?
     message: string;
     index: number;
     input: string;

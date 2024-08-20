@@ -1,10 +1,5 @@
-import { my_includes } from "./utils.js";
-import { parser_seq, simple_parser, alphabet_parser, doSequence, plus_minus_parser } from "./parsers.js";
 import { parse } from "./parsers.js";
-import { Node, Parser } from "./types.js"
-import { Some } from "./parser_combinators.js";
-import { root } from "./grammer.js";
-import { json } from "stream/consumers";
+import { term } from "./grammer.js";
 
 
 
@@ -18,12 +13,55 @@ const textarea = document.getElementById(editorID)! as HTMLTextAreaElement;
 const ce_div = document.getElementById(compiledExpressionID)! as HTMLDivElement;
 const token_display_div = document.getElementById(tokenDisplayID)! as HTMLDivElement;
 
-let valid = null;
-
 if (!textarea || !ce_div || !token_display_div) {
     throw Error("something went wrong, html elements are missing.")
 }
+
+class StateManager<T> { // TODO: move to another file
+    state: T
+    callback: Function;
+    constructor(state: T) {
+        this.state = state;
+        this.callback = function () { };
+    }
+    get_state() {
+        return this.state;
+    }
+    set_callback(callback: Function) {
+        this.callback = callback;
+    }
+    set_state(state: T) {
+        this.state = state;
+        this.callback();
+    }
+}
+
+
+let is_valid: boolean = false;
+const is_valid_state = new StateManager<boolean>(is_valid);
+is_valid_state.set_callback(() => {
+    console.log("state changed")
+    if (is_valid_state.get_state()) {
+        textarea.style.backgroundColor = 'darkgreen';
+    } else {
+        textarea.style.backgroundColor = 'darkred';
+    }
+});
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    onload();
+    textarea.addEventListener("input", textarea_oninput);
+
+});
+
+
 const textarea_oninput = () => {
+
     // Save the state of the text area to session storage
     sessionStorage.setItem(USER_INPUT_STATE_KEY, textarea.value);
 
@@ -32,47 +70,33 @@ const textarea_oninput = () => {
 
 
     try {
-        // get parser
-        // const top_level_parser = parser_generator.rules.get("statement")! 
-
-        const result = parse(root, expr);
+        const result = parse(term, expr);
         token_display_div.innerText = JSON.stringify(result);
+        is_valid_state.set_state(result.ok);
+
 
         console.log(result)
         if (result.ok && (result.value.remaining.length === 0)) {
 
-            textarea.style.backgroundColor = 'darkgreen';
+
+            is_valid_state.set_state(true);
         }
         if (!result.ok) {
-            textarea.style.backgroundColor = 'darkred';
+
+            is_valid_state.set_state(false);
             throw new Error("result not okay")
 
         }
         if (result.ok && result.value.remaining.length > 0) {
-            textarea.style.backgroundColor = 'darkred';
+            is_valid_state.set_state(false);
             throw new Error("inadquate parser for the input or other stuff")
         }
 
     } catch (e) {
         console.error(e)
-        textarea.style.backgroundColor = 'darkred';
-
+        is_valid_state.set_state(false);
     }
 }
-
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    onload(); // hopefully this loads after the dom content is loaded
-
-    const global_AST = []
-    textarea.addEventListener("input", textarea_oninput);
-});
-
 
 
 function get_state_or_null(key: string) {
@@ -95,12 +119,3 @@ function onload() {
     textarea.value = result;
 
 }
-
-function fetch_and_set_textarea() { // TODO: change name
-    const textarea = document.getElementById(editorID)! as HTMLTextAreaElement;
-    if (sessionStorage.getItem(USER_INPUT_STATE_KEY)) {
-        textarea.value = sessionStorage.getItem(USER_INPUT_STATE_KEY) as string;
-    } else {
-        textarea.value = "";
-    }
-}   
