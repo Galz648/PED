@@ -1,8 +1,8 @@
 import { get } from "http"
-import { Visitor } from "./ast_generator"
+import { ASTGenerator, Visitor } from "./ast_generator"
 import { error } from "./match"
 import { doSequence, optional, Or, Some } from "./parser_combinators"
-import { alphabet_parser, left_paran_parser, literal_parser, mult_div_parser, plus_minus_parser, right_paran_parser, white_space_parser } from "./parsers"
+import { alphabet_parser, left_paran_parser, literal_parser, mult_div_parser, plus_minus_parser, right_paran_parser, white_space_parser, zeroOrMore } from "./parsers"
 import { ParseError, Parser, ParserCursor } from "./types"
 
 /* 
@@ -20,14 +20,18 @@ import { ParseError, Parser, ParserCursor } from "./types"
 
 */
 // TODO: wrap this in a namespace
-export interface Literal {
-    value: string | number | ""
+
+export interface Rule {
+    accept<T extends Visitor>(visitor: T): any
 }
-export interface Term {
-    left_expr: Literal
-    mul_op: Operation
-    right_expr: Literal
-    accept(visitor: Visitor): any
+
+export interface Literal<T> extends Rule {
+    value: T
+}
+export interface Term extends Rule {
+    left_expr: Literal<any>
+    op: "*" | "/"
+    right_expr: Literal<any>
 }
 export interface Factor {
     expression: Expression
@@ -41,11 +45,24 @@ export type Operation = "+" | "/" | "-" | "*"
 
 
 
-export interface Expression {
+export interface Expression extends Rule {
     left_term: Term
     add_op: "+" | "-"
     right_term: Term
-    accept(visitor: Visitor): any
+}
+
+export class ExpressionNode implements Expression {
+    left_term: Term
+    add_op: "+" | "-"
+    right_term: Term
+    constructor(left_term: Term, add_op: "+" | "-", right_term: Term) {
+        this.left_term = left_term
+        this.add_op = add_op
+        this.right_term = right_term
+    }
+    accept(visitor: Visitor) {
+        return visitor.visitExpression(this)
+    }
 }
 
 // rules corresponding to parsers
@@ -56,9 +73,9 @@ export interface Expression {
 // const factor = optional(Some(Or(alphabet_parser, white_space_parser)))
 // wrap the parser and return an AST
 
-class LiteralNode implements Literal {
-    value: string | number | ""
-    constructor(value: string | number | "") {
+export class LiteralNode<T> implements Literal<T> {
+    value: T
+    constructor(value: T) {
         this.value = value
     }
     accept(visitor: Visitor) {
@@ -66,51 +83,45 @@ class LiteralNode implements Literal {
     }
 }
 export class TermNode implements Term {
-    left_expr: Literal
-    mul_op: Operation
-    right_expr: Literal 
-    constructor(left_expr: Literal, right_expr: Literal) {
+    left_expr: Literal<any>
+    op: "*" | "/"
+    right_expr: Literal<any>
+    constructor(left_expr: Literal<any>, op: "/" | "*", right_expr: Literal<any>) {
         this.left_expr = left_expr
         this.right_expr = right_expr
-        this.mul_op = "*"
+        this.op = op
     }
     accept(visitor: Visitor) {
         return visitor.visitTerm(this)
     }
 }
 
-function get_factor_parser(): Parser<Factor> {
-    const factor = alphabet_parser
-    const wrapper: Parser<Factor> = (cursor: ParserCursor) => { 
-         // wrap term with additional functionality - generate AST node
+export function get_factor_parser(): Parser<Factor> {
+    const factor = doSequence([alphabet_parser, doSequence([mult_div_parser, alphabet_parser])])
+    const wrapper: Parser<Factor> = (cursor: ParserCursor<Factor>) => {
+        // wrap term with additional functionality - generate AST node
         const result = factor(cursor)
         if (result.ok) {
-            const factor_node = new LiteralNode(result.value.parsed)
-            result.value.AST.push(factor_node)
-            console.log(`Factor: `)
-            console.log(result.value.AST)
             return result
+
         }
-        else {
-            return result
-        }
+
+        return result
 
     }
     return wrapper
 }
-function get_term_parser(): Parser<Term> {
-    const term = doSequence([get_factor_parser(), mult_div_parser, get_factor_parser()])
-    const wrapper: Parser<Term> = (cursor: ParserCursor) => { 
-         // wrap term with additional functionality - generate AST node
+export function get_term_parser(): Parser<Term> {
+    const term = doSequence([get_factor_parser(), doSequence([plus_minus_parser, get_factor_parser()])])
+    const wrapper: Parser<Term> = (cursor: ParserCursor<Term>) => {
+        // wrap term with additional functionality - generate AST node
         const result = term(cursor)
+
         console.log(result)
         if (result.ok) {
-            // pop the AST nodes from the result and create a new AST node
-            const left = result.value.AST.pop()
-            const op = result.value.AST.pop()
-            const right = result.value.AST.pop()
-            const term_node = new TermNode(left, right)
-            result.value.AST.push(term_node)
+            // visitor pattern for AST generation
+            // const ast_generator = new ASTGenerator()
+            // ast_generator.visitTerm(result.value.AST[0])
             return result
         }
         else {
@@ -120,10 +131,33 @@ function get_term_parser(): Parser<Term> {
     }
     return wrapper
 }
-const factor = optional((alphabet_parser))
+
+export function get_expr_parser(): Parser<Expression> {
+    const expr = doSequence([get_term_parser(), optional(doSequence([plus_minus_parser, get_term_parser()]))])
+    const wrapper: Parser<Expression> = (cursor: ParserCursor<Expression>) => {
+        // wrap term with additional functionality - generate AST node
+        const result = expr(cursor)
+        if (result.ok) {
+            // // pop the AST nodes from the result and create a new AST node
+            // const left = result.value.AST.pop()
+            // const op = result.value.AST.pop()
+            // const right = result.value.AST.pop()
+            // const expr_node = new ExpressionNode(left, op, right)
+            // console.log(`Expression: `)
+            // console.log(result.value.AST)
+            // result.value.AST.push(expr_node)
+            return result
+        }
+        else {
+            return result
+        }
+
+    }
+    return wrapper
+}
+// const factor = optional((alphabet_parser))
 // const term = doSequence([Or(factor, doSequence([factor, mult_div_parser, factor]))])
 // export const Expr = doSequence([get_term_parser(), plus_minus_parser, get_term_parser()]) // FIX: putting the Or parser combinator inside the doSequence doesn't work as expected
-export const term = get_term_parser()
 // const Expr = doSequence([term], "Expr")
 // const ParenthesizedExpr = doSequence([left_paran_parser, Expr, right_paran_parser])
 // export const root = doSequence([Or(Expr, ParenthesizedExpr)])

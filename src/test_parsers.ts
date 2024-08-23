@@ -1,4 +1,4 @@
-import { Expr } from "./grammer";
+import { get_expr_parser } from "./grammer";
 import { parse } from "./parsers";
 
 interface TestCase {
@@ -58,7 +58,7 @@ const test_parsers = (test_cases: TestCase[]) => {
     let passing_tests = 0
 
     for (const test_case of test_cases) {
-        const result = parse(Expr, test_case.input, "expression");
+        const result = parse(get_expr_parser(), test_case.input);
         if (result.ok !== test_case.expected) {
             failing_tests += 1
 
