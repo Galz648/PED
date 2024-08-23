@@ -5,7 +5,6 @@ import { Result, Ok, Err, error, ok } from './match.js';
 import { findSubstring, head } from './utils.js';
 // import { Or, Some, doSequence } from './parser_combinators.js';
 import { doSequence, Or, Some } from './parser_combinators.js';
-import { ASTGenerator } from './ast_generator.js';
 
 
 // TODO: Extract parser inner functionality to a function
@@ -13,8 +12,8 @@ import { ASTGenerator } from './ast_generator.js';
 // Parser that matches a single digit
 
 
-export const literal_parser = (literal: string): Parser<string> => {
-    const _ = (cursor: ParserCursor) => {
+const literal_parser = (literal: string): Parser<string> => {
+    const _ = (cursor: ParserCursor<string>) => {
         const result = head(cursor.remaining);
         // TOOD: figure out the position of the parser at points of failure
 
@@ -71,7 +70,7 @@ const digit_parser: Parser<number> = (cursor) => { // TODO: change to a more spe
 
 
 // Parser that matches a single whitespace character
-export const white_space_parser: Parser<" "> = (cursor) => {
+const white_space_parser: Parser<" "> = (cursor) => {
     const pattern = /^\s/; // Regex to match a single whitespace character
     const result = head(cursor.remaining);
 
@@ -99,7 +98,7 @@ export const white_space_parser: Parser<" "> = (cursor) => {
 
 // Parser that matches a plus or minus sign
 // Parser that matches a single whitespace character
-export const plus_minus_parser: Parser<"+" | "-"> = (cursor) => {
+const plus_minus_parser: Parser<"+" | "-"> = (cursor) => {
     const pattern = /^[+-]/;  // Regex to match plus or minus sign
     const result = head(cursor.remaining);
 
@@ -125,7 +124,7 @@ export const plus_minus_parser: Parser<"+" | "-"> = (cursor) => {
     }
 };
 
-export const alphabet_parser: Parser<string> = (cursor) => {
+const alphabet_parser: Parser<string> = (cursor) => {
     const pattern = /^[a-zA-Z]/; // Regex to match a single alphabet letter
     const result = head(cursor.remaining);
 
@@ -157,13 +156,13 @@ export const alphabet_parser: Parser<string> = (cursor) => {
 
 
 
-// export const simple_parser = Some(
+// const simple_parser = Some(
 //     Or(
 //         alphabet_parser, digit_parser
 //     ));
 
 // Function that applies a parser to a string
-export const eof_parser: Parser<""> = (cursor) => {
+const eof_parser: Parser<""> = (cursor) => {
     if (cursor.remaining.length == 0) {
         const result = head(cursor.remaining)
         const c = {
@@ -177,30 +176,29 @@ export const eof_parser: Parser<""> = (cursor) => {
     });
 }
 
-export function parse<T>(parser: Parser<T>, str: string): Result<ParserCursor, ParseError> {
-    try {
+function parse<T>(parser: Parser<T>, str: string): Result<ParserCursor<T>, ParseError> {
+
         // parsing_result.length > 0 && parsing_result === "" // TODO: write an alternative to this
-        const ci: ParserCursor = {
+        const ci: ParserCursor<T> = {
             parsed: "",
             input: str,
             remaining: str,
-            AST: []
+            AST:  []
         }
 
         const result = parser(ci);
-        const ast_gen = new ASTGenerator();
+        // const ast_gen = new ASTGenerator();
         if (result.ok) {
-            const ast = ast_gen.visitTerm(result.value.AST);
-
+            // const ast = ast_gen.visitTerm(result.value.AST);
+            return result;
         }
-        return result;
-    } catch (e) {
-        return error<ParseError>(e as ParseError); // TODO: determine if there is a better solution than this
-    }
+        else {
+            return error<ParseError>(result.value); // TODO: determine if there is a better solution than 
+        }
 
 
 }
-export const mult_div_parser: Parser<"+" | "*"> = (cursor) => {
+const mult_div_parser: Parser<"+" | "*"> = (cursor) => {
     const pattern = /^[*/]/; // Regex to match a single digit
     const result = head(cursor.remaining);
     // TOOD: figure out the position of the parser at points of failure
@@ -259,12 +257,17 @@ const eq_parser: Parser<"="> = (cursor) => {
     }
 };
 
+// Literal Parsers
+const left_paran_parser = literal_parser("(")
+const right_paran_parser = literal_parser(")")
 
-export { doSequence };
+const grammer_parser = Some(doSequence([alphabet_parser]))
 
+// function / parser combinator
+export { doSequence, parse};
+// parsers
+export { alphabet_parser,  left_paran_parser, right_paran_parser, grammer_parser, literal_parser, mult_div_parser, plus_minus_parser}
 
-export const left_paran_parser = literal_parser("(")
-export const right_paran_parser = literal_parser(")")
 
 // Grammer rules as parser combinators
 

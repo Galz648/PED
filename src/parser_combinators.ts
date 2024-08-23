@@ -2,18 +2,12 @@ import { Parser, ParserCombinator, ParseError, ParserCursor } from "./types";
 import {
     Result, Ok, Err, error, ok
 } from "./match.js";
-import { eof_parser } from "./parsers";
 
 // TODO: remove duplicate type from function declarations
 // TODO: change [] to EmptyTuple in types.ts
 
-
-export const optional: ParserCombinator = (parser: Parser) => {
-    return Or(parser, eof_parser)
-}
-
 // rewriting the Or function to use the new Parser type - use the ParserCursor type
-export function Or(parser1: Parser, parser2: Parser): Parser {
+export function Or<T, U> (parser1: Parser<T >, parser2: Parser<U>): Parser<T| U> {
     return (input: ParserCursor): Result<ParserCursor, ParseError> => {
         const result1 = parser1(input);
         if (result1.ok) {
@@ -47,9 +41,9 @@ export const doSequence= (parsers: Parser<any>[]): Parser<any> => {
     return wrapped_parser;
 };
 
-export const Some: ParserCombinator = (parser: Parser): Parser => {
+export const Some: ParserCombinator = <T>(parser: Parser<T>): Parser<T> => {
 
-    const wrapped_parser: Parser = (cursor) => {
+    const wrapped_parser: Parser<T> = (cursor) => {
         let parsed = "";
         let should_run = true
         let remaining = cursor.remaining
@@ -67,9 +61,11 @@ export const Some: ParserCombinator = (parser: Parser): Parser => {
             }
             else {
                 return error<ParseError>({
+                    name: "Some",
                     message: `Some - Failed Parsing: ${remaining}`,
                     index: result.value.index,
-                    input: cursor.input
+                    input: cursor.input,
+                    
                 })
             }
 
@@ -77,7 +73,8 @@ export const Some: ParserCombinator = (parser: Parser): Parser => {
         return ok({
             parsed: parsed,
             remaining: new_cursor.remaining,
-            input: cursor.input
+            input: cursor.input,
+            AST: []
         });
     }
 

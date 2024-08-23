@@ -1,5 +1,4 @@
-import { parse } from "./parsers.js";
-import { term } from "./grammer.js";
+import { grammer_parser, parse } from "./parsers.js";
 
 
 
@@ -70,7 +69,7 @@ const textarea_oninput = () => {
 
 
     try {
-        const result = parse(term, expr);
+        const result = parse(grammer_parser, expr);
         token_display_div.innerText = JSON.stringify(result);
         is_valid_state.set_state(result.ok);
 
