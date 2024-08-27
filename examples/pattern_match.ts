@@ -1,9 +1,5 @@
 import { Result, ok, error } from "../src/match.js"
 
-type Pair = {
-    a: Expression
-    b: Expression
-}
 
 type Functor = {
     tag: "Functor"
@@ -24,17 +20,7 @@ export type Expression = Literal | Functor
 // TODO: implement binding - DONE
 // TODO: implement recursion into head matching - traversing each tree (variable binding) - DONE
 // taken from noq_example.ts
-let bindings: Map<string, Expression> = new Map() // why is the key a string and not an expression?
-
-
-// test if two "Expressions" are equal
-const expr_1 = {
-    value: 1
-}
-const expr_2 = {
-    value: 2
-}
-
+let bindings: Map<string, Expression> = new Map() // why is the key a string and not an expression
 
 class Rule {
     head: Expression

@@ -1,3 +1,4 @@
+import exp from "constants"
 import { Result, ok, error } from "./match"
 
 type Functor = {
@@ -11,13 +12,38 @@ type Literal = {
 }
 export type Expression = Literal | Functor
 
+function onLiteral(literal: Literal, acc: string) {
+    acc += literal.value
+    return acc
+}
+function onFunctor(functor: Functor, acc: string) {
+    const reps = functor.expressions.map((expr) => {
+        return walk_expr(expr)
+    })
+   
+    acc += functor.name + "(" + reps + ")"
+    return acc
+}
 
-
-// TODO: apply rule swap on pair - IN PROGRESS
-// * TODO: dereference the bindings
+function walk_expr(expr: Expression) {
+    let acc = "";
+    // acc += onA(walkA(char) as A, acc) : acc += onB(walkB(char), acc)
+    return (expr.tag == "Functor") ? onFunctor(walkFunctor(expr), acc) : onLiteral(walkLiteral(expr), acc)
+}
+// TODO: implement display of rules
+// TODO: remove bindings from map when dereferencing
+// TODO: function to walk expression (pattern matching)
 // TODO: move to the main project and commit 
 // TODO: implement binding - DONE
+// TODO: dereference the bindings - DONE
+// TODO: apply rule swap on pair - DONE
 // TODO: implement recursion into head matching - traversing each tree (variable binding) - DONE
+/* 
+weaknesses of the code: 
+mutating global map
+nested if statements - how to make these look better ? 
+
+*/
 // taken from noq_example.ts
 type Bindings = Map<string, Expression>
 let bindings: Bindings = new Map() // why is the key a string and not an expression?
@@ -51,7 +77,7 @@ type Maybe<T> = Some<T> | null // TODO: according to the fp playlist, there is a
 function match(value: Expression, rules: Rule[]): Result<Expression, MatchError> {
     // TODO: nothing is done with comparison error message
     let found_rule: Maybe<Rule> = null
-    const match = rules.some((rule) => { // TODO: change this cranky implementationw    
+    const match = rules.some((rule) => { // TODO: change this cranky implementation
         console.log(value, rule)
         const result = compareExpressions(value, rule.head, bindings)
         console.log(result)
@@ -148,6 +174,30 @@ function compareExpressions<T>(expr: Expression, head: Expression, bindings: Map
     }
 }
 
+// function expr_to_string(expr: Expression): string {
+//     let repr: string = ""
+//     // walk expr
+//     function walk_expr_inner(expr: Expression) {
+//         if (expr.tag == "Functor") {
+//             walk_expr_inner(expr.expressions.forEach(()))
+//         }
+//         else if (expr.tag == "Literal") {
+//             return
+//         }
+//     }
+
+//     walk_expr(expr, (literal: Literal) => {
+//         repr.concat(literal.value)
+//     }, (functor: Functor) => {
+//         repr.concat(functor.name)
+//         repr.concat("(")
+//         walk_expr(functor, (literal: Literal) => {
+//             repr.concat(literal.value)
+//         }, )
+//     })
+
+//     return repr
+// }
 function dereference(result: Expression, bindings: Bindings) {
 
     if (result.tag == "Functor") {
@@ -156,7 +206,7 @@ function dereference(result: Expression, bindings: Bindings) {
     else if (result.tag == "Literal") {
         // determine if mapping exists
         const lookup = bindings.get(result.value)
-        if(lookup) {
+        if (lookup) {
             // replace in result
             if (lookup.tag == "Literal") {
                 result.value = lookup.value // replace value
@@ -168,11 +218,22 @@ function dereference(result: Expression, bindings: Bindings) {
 
 
 function main() {
+    const input = {
+        tag: "Functor", name: "swap", expressions: [
+            {
+                tag: "Functor",
+                name: "pair",
+                expressions: [{ tag: "Literal", value: "c" }, { tag: "Literal", value: "d" }]
+            }]
+    }
 
     const swap_pair = new Rule({
-        tag: "Functor",
-        name: "pair",
-        expressions: [{ tag: "Literal", value: "a" }, { tag: "Literal", value: "b" }]
+        tag: "Functor", name: "swap", expressions: [
+            {
+                tag: "Functor",
+                name: "pair",
+                expressions: [{ tag: "Literal", value: "a" }, { tag: "Literal", value: "b" }]
+            }]
     }, {
         tag: "Functor",
         name: "pair",
@@ -180,11 +241,7 @@ function main() {
     })
 
 
-    const result = match({
-        tag: "Functor",
-        name: "pair",
-        expressions: [{ tag: "Literal", value: "c" }, { tag: "Literal", value: "d" }]
-    }, [swap_pair])
+    const result = match(input as Expression, [swap_pair])
     // Swap(Pair(a,b)) = Pair(a, b)
     // Swap(Pair(g(c), f(d))) -> ?
 
@@ -192,8 +249,11 @@ function main() {
         console.log(`result: ${JSON.stringify(result)}\n\n\n\n\n\t ----\n RULE: ${JSON.stringify(swap_pair)}`)
         console.log("bindings: ")
         console.log(bindings)
-        const final = dereference(result.value, bindings)
-        console.log(`final: ${JSON.stringify(final)}`)
+        const deref = dereference(result.value, bindings)
+        const repr_original = walk_expr(input as Expression)
+        const repr_result = walk_expr(deref)
+        console.log(`${JSON.stringify(repr_original)} = ${JSON.stringify(repr_result)}`)
+
     }
 
 }
@@ -202,8 +262,16 @@ function main() {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-
     main()
 })
 
+
+function walkFunctor(expr: Functor) {
+    expr.expressions.map((expr: Expression) => walk_expr(expr))
+    return expr
+}
+
+function walkLiteral(expr: Literal): Literal {
+    return expr
+}
 
