@@ -8,7 +8,7 @@ import {
 
 // rewriting the Or function to use the new Parser type - use the ParserCursor type
 export function Or<T, U> (parser1: Parser<T >, parser2: Parser<U>): Parser<T| U> {
-    return (input: ParserCursor): Result<ParserCursor, ParseError> => {
+    return (input: ParserCursor<T>): Result<ParserCursor<U>, ParseError> => {
         const result1 = parser1(input);
         if (result1.ok) {
             return result1;

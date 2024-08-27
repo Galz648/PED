@@ -13,7 +13,7 @@ export interface ParserCursor<T>{
 
 
 
-export type Parser<T> = (input: ParserCursor) => Result<ParserCursor, ParseError>; // TODO: change any type to a more specific type
+export type Parser<T> = (input: ParserCursor<T>) => Result<ParserCursor<T>, ParseError>; // TODO: change any type to a more specific type
 export type ParserCombinator = <T,U>(parser: Parser<T>) => Parser<U>;
 
 

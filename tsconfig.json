@@ -115,8 +115,10 @@
     "src/**/*",
     "public/ws-client.ts",
     "scripts/whatever.ts",
-    "junk/parser_combinator.ts"
-, "examples/generate_AST.ts"  ],
+    "junk/parser_combinator.ts",
+    "examples/generate_AST.ts",
+    "src/rules.ts"
+  ],
   "exclude": [
     "node_modules",
     "public",
