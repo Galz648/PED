@@ -2,7 +2,11 @@
   "name": "ped",
   "version": "1.0.0",
   "description": "An editor for solving physics homework",
-  "scripts": {},
+  "main": "index.ts",
+  "scripts": {
+    "main": "vite",
+    "test": "tsc src/tests/run_tests.ts && node src/tests/run_tests.js && rm ./src/tests/run_tests.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/galz648/PED.git"

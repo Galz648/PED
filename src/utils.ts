@@ -46,3 +46,5 @@ export function findSubstring(original: string, pattern: string): number[] {
 
     return matches;
 }
+
+export const zip = (a: any[], b: any[]) => a.map((k, i) => [k, b[i]]);

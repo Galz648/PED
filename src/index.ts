@@ -1,3 +1,4 @@
+import { get_expr_parser } from "./grammer.js";
 import { grammer_parser, parse } from "./parsers.js";
 
 
@@ -69,7 +70,7 @@ const textarea_oninput = () => {
 
 
     try {
-        const result = parse(grammer_parser, expr);
+        const result = parse(get_expr_parser(), expr);
         token_display_div.innerText = JSON.stringify(result);
         is_valid_state.set_state(result.ok);
 

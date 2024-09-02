@@ -31,7 +31,7 @@ export interface Expression {
 }
 
 export function get_factor_parser(): Parser<Factor> {
-    const factor = doSequence([alphabet_parser, doSequence([mult_div_parser, alphabet_parser])])
+    const factor = doSequence([alphabet_parser])
     const wrapper: Parser<Factor> = (cursor: ParserCursor<Factor>) => {
         // wrap term with additional functionality - generate AST node
         const result = factor(cursor)

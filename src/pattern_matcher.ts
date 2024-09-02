@@ -1,5 +1,7 @@
-import exp from "constants"
 import { Result, ok, error } from "./match"
+import { zip } from "./utils"
+type Bindings = Map<string, Expression>
+let bindings: Bindings = new Map()
 
 type Functor = {
     tag: "Functor"
@@ -11,42 +13,6 @@ type Literal = {
     value: string
 }
 export type Expression = Literal | Functor
-
-function onLiteral(literal: Literal, acc: string) {
-    acc += literal.value
-    return acc
-}
-function onFunctor(functor: Functor, acc: string) {
-    const reps = functor.expressions.map((expr) => {
-        return walk_expr(expr)
-    })
-   
-    acc += functor.name + "(" + reps + ")"
-    return acc
-}
-
-function walk_expr(expr: Expression) {
-    let acc = "";
-    // acc += onA(walkA(char) as A, acc) : acc += onB(walkB(char), acc)
-    return (expr.tag == "Functor") ? onFunctor(walkFunctor(expr), acc) : onLiteral(walkLiteral(expr), acc)
-}
-// TODO: implement display of rules
-// TODO: remove bindings from map when dereferencing
-// TODO: function to walk expression (pattern matching)
-// TODO: move to the main project and commit 
-// TODO: implement binding - DONE
-// TODO: dereference the bindings - DONE
-// TODO: apply rule swap on pair - DONE
-// TODO: implement recursion into head matching - traversing each tree (variable binding) - DONE
-/* 
-weaknesses of the code: 
-mutating global map
-nested if statements - how to make these look better ? 
-
-*/
-// taken from noq_example.ts
-type Bindings = Map<string, Expression>
-let bindings: Bindings = new Map() // why is the key a string and not an expression?
 
 class Rule {
     head: Expression
@@ -74,6 +40,51 @@ type Maybe<T> = Some<T> | null // TODO: according to the fp playlist, there is a
 
 
 
+function match_expr(expr: Expression, onLiteral: (expr: Literal) => any, onFunctor: (expr: Functor) => any, handle_else: (expr: Expression) => any) {
+    if (expr.tag == "Literal") {
+        return onLiteral(expr)
+    }
+    else if (expr.tag == "Functor") {
+        return onFunctor(expr)
+    }
+    else {
+        handle_else(expr)
+    }
+}
+
+
+
+function onLiteral(literal: Literal, acc: string) {
+    acc += literal.value
+    return acc
+}
+function onFunctor(functor: Functor, acc: string) {
+    const reps = functor.expressions.map((expr) => {
+        return walk_expr(expr)
+    })
+
+    acc += functor.name + "(" + reps + ")"
+    return acc
+}
+
+function walk_expr(expr: Expression) {
+    let acc = "";
+    // acc += onA(walkA(char) as A, acc) : acc += onB(walkB(char), acc)
+    return (expr.tag == "Functor") ? onFunctor(walkFunctor(expr), acc) : onLiteral(walkLiteral(expr), acc)
+}
+// TODO: implement display of rules
+// TODO: remove bindings from map when dereferencing
+// TODO: function to walk expression (pattern matching)
+// TODO: move to the main project and commit 
+/* 
+weaknesses of the code: 
+mutating global map
+nested if statements - how to make these look better ? 
+
+*/
+
+
+
 function match(value: Expression, rules: Rule[]): Result<Expression, MatchError> {
     // TODO: nothing is done with comparison error message
     let found_rule: Maybe<Rule> = null
@@ -95,30 +106,10 @@ function match(value: Expression, rules: Rule[]): Result<Expression, MatchError>
     return error(new MatchError(`Failed to match ${JSON.stringify(value)} with rules`))
 }
 
-
-
-// const result = match({ tag: "Literal", value: "a" }, [
-//     {
-//         head: { tag: "Literal", value: "a" },
-//         body: { tag: "Literal", value: "b" }
-//     }
-// ])
-
-// console.log(result)
-
-
-/* 
-
-(Expr, symbol) -> bind symbol: Expr
-(symbol, Expr) -> Error ? 
-
-Swap(Pair(f(c), g(d))) = Pair()
-*/
-
 // TODO: prettify this ugly shit
 function compareExpressions<T>(expr: Expression, head: Expression, bindings: Map<string, Expression>): Result<Map<string, Expression>, MatchError> {
     // traverse each of the expressions and compare them along the way.
-    // you can traverse the expressions recursively
+    // traversing the expressions recursively
 
     // [expr, head]
     // (functor, functor) -> check deep equality
@@ -126,9 +117,6 @@ function compareExpressions<T>(expr: Expression, head: Expression, bindings: Map
     // [symbol, functor] -> return error for now
 
     const both_functors = expr.tag == "Functor" && head.tag == "Functor"
-
-    // 
-
     if (head.tag == "Literal") {
         // 
         bindings.set(head.value, expr)
@@ -145,7 +133,6 @@ function compareExpressions<T>(expr: Expression, head: Expression, bindings: Map
         // TODO: compare sub statements
         // TODO: create bindings
         // compare sub-expressions
-        const zip = (a: any[], b: any[]) => a.map((k, i) => [k, b[i]]);
         const zipped_functors = zip(expr.expressions, head.expressions)
         const results = zipped_functors.map((pair) => {
             const result = compareExpressions(pair[0], pair[1], bindings)
@@ -158,7 +145,7 @@ function compareExpressions<T>(expr: Expression, head: Expression, bindings: Map
         })
 
         if (results.some((result) => !result.ok)) {
-            return error(new Error(""))
+            return error(new Error("Something bad happened"))
         }
         // zip + reduce ? determine if one of othem is invalid
         // compareExpressions(expr.expressions, head.expressions)
@@ -173,51 +160,34 @@ function compareExpressions<T>(expr: Expression, head: Expression, bindings: Map
         return error(new Error("encountered unhandled codepath"))
     }
 }
+function walkFunctor(expr: Functor) {
+    expr.expressions.map((expr: Expression) => walk_expr(expr))
+    return expr
+}
 
-// function expr_to_string(expr: Expression): string {
-//     let repr: string = ""
-//     // walk expr
-//     function walk_expr_inner(expr: Expression) {
-//         if (expr.tag == "Functor") {
-//             walk_expr_inner(expr.expressions.forEach(()))
-//         }
-//         else if (expr.tag == "Literal") {
-//             return
-//         }
-//     }
+function dereference(expr: Expression, bindings: Bindings) { // TODO: change name from result
 
-//     walk_expr(expr, (literal: Literal) => {
-//         repr.concat(literal.value)
-//     }, (functor: Functor) => {
-//         repr.concat(functor.name)
-//         repr.concat("(")
-//         walk_expr(functor, (literal: Literal) => {
-//             repr.concat(literal.value)
-//         }, )
-//     })
-
-//     return repr
-// }
-function dereference(result: Expression, bindings: Bindings) {
-
-    if (result.tag == "Functor") {
-        result.expressions.map((expr) => dereference(expr, bindings))
-    }
-    else if (result.tag == "Literal") {
-        // determine if mapping exists
-        const lookup = bindings.get(result.value)
+    const onLiteral = (literal: Literal) => {
+        const lookup = bindings.get(literal.value)
         if (lookup) {
-            // replace in result
             if (lookup.tag == "Literal") {
-                result.value = lookup.value // replace value
+                literal.value = lookup.value
             }
         }
     }
-    return result
+    const onFunctor = (functor: Functor) => functor.expressions.map((expr) => dereference(expr, bindings))
+    // const onLiteral = 
+
+    match_expr(expr, onLiteral, onFunctor, (_) => {
+        console.error("case not handled ")
+    })
+
+    return expr
 }
 
-
 function main() {
+    // TODO: create a "replace all" given an expression and a rule
+    // TODO: instead of inputting an Expression, create a parser to generate the Expression from string
     const input = {
         tag: "Functor", name: "swap", expressions: [
             {
@@ -227,26 +197,23 @@ function main() {
             }]
     }
 
-    const swap_pair = new Rule({
-        tag: "Functor", name: "swap", expressions: [
-            {
-                tag: "Functor",
-                name: "pair",
-                expressions: [{ tag: "Literal", value: "a" }, { tag: "Literal", value: "b" }]
-            }]
-    }, {
+    const swap_pair = new Rule(
+        {
+            tag: "Functor", name: "swap", expressions: [
+                {
+                    tag: "Functor",
+                    name: "pair",
+                    expressions: [{ tag: "Literal", value: "a" }, { tag: "Literal", value: "b" }]
+                }]
+        }, {
         tag: "Functor",
         name: "pair",
         expressions: [{ tag: "Literal", value: "b" }, { tag: "Literal", value: "a" }]
     })
 
-
     const result = match(input as Expression, [swap_pair])
-    // Swap(Pair(a,b)) = Pair(a, b)
-    // Swap(Pair(g(c), f(d))) -> ?
 
     if (result.ok) {
-        console.log(`result: ${JSON.stringify(result)}\n\n\n\n\n\t ----\n RULE: ${JSON.stringify(swap_pair)}`)
         console.log("bindings: ")
         console.log(bindings)
         const deref = dereference(result.value, bindings)
@@ -259,17 +226,7 @@ function main() {
 }
 
 
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    main()
-})
-
-
-function walkFunctor(expr: Functor) {
-    expr.expressions.map((expr: Expression) => walk_expr(expr))
-    return expr
-}
+document.addEventListener("DOMContentLoaded", () => { main() })
 
 function walkLiteral(expr: Literal): Literal {
     return expr
