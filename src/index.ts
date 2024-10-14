@@ -3,6 +3,7 @@ import { grammer_parser, parse } from "./parsers.js";
 
 
 
+
 const editorID = "editor";
 const compiledExpressionID = "compiled_expression";
 const tokenDisplayID = "token_display";
@@ -53,7 +54,6 @@ is_valid_state.set_callback(() => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
     onload();
     textarea.addEventListener("input", textarea_oninput);
 

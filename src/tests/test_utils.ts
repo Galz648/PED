@@ -12,14 +12,14 @@ export interface TestResults {
     num_fail: number
 }
 
+type LazyTestResults = () => TestResults
 
-
-type Tester = (cases: TestCase[], name: string) => TestResults
+type Tester = (cases: TestCase[], name: string, evaluator: Evaluator ) => LazyTestResults
 
 
 type Evaluator = (_case: TestCase) => Result<any, any> // TODO: provide specific types
 
-function run_cases(test_cases: TestCase[], name: string, evaluator: Evaluator): TestResults {
+function run_cases(test_cases: TestCase[], name: string, evaluator: Evaluator): TestResults { // TODO: move to utils? 
     let total_tests = test_cases.length
     let failing_tests = 0
     let passing_tests = 0
@@ -50,12 +50,11 @@ function run_cases(test_cases: TestCase[], name: string, evaluator: Evaluator): 
     }
 }
 
-function gen_tester(cases: TestCase[], name: string, evaluator: Evaluator): Tester {
+const gen_tester: Tester = (cases: TestCase[], name: string, evaluator: Evaluator) => {
+    return () => {
     const results = run_cases(cases, name, evaluator)
-    const tester = () => {
         return results
     }
-    return tester
 }
 
 
@@ -67,8 +66,10 @@ export {
 
 // Interfaces and Types
 
+// Interfaces and Types
 export {
     Tester,
     TestCase,
-    Evaluator
+    // Evaluator,
+    LazyTestResults, Evaluator
 }

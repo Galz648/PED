@@ -117,7 +117,8 @@
     "scripts/whatever.ts",
     "junk/parser_combinator.ts",
     "examples/generate_AST.ts",
-    "src/rules.ts"
+    "src/rules.ts",
+    "src/tests/test_parsers.ts"
   ],
   "exclude": [
     "node_modules",

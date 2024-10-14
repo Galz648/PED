@@ -1,11 +1,9 @@
 
 import { ParseError, ParserCursor } from './types.js';
-import { Parser } from './types.js';
-import { Result, Ok, Err, error, ok } from './match.js';
-import { findSubstring, head } from './utils.js';
-// import { Or, Some, doSequence } from './parser_combinators.js';
-import { doSequence, Or, Some } from './parser_combinators.js';
-
+import { Parser } from './types.js'
+import { Result, error, ok } from './match.js';
+import { head } from './utils.js';
+import { Or, Some, doSequence } from './parser_combinators.js';
 
 // TODO: Extract parser inner functionality to a function
 // TODO: write function to have a n-ary input for Or
@@ -37,35 +35,35 @@ const literal_parser = (literal: string): Parser<string> => {
     }
     return _
 
-}
-const digit_parser: Parser<number> = (cursor) => { // TODO: change to a more specific type
-    const pattern = /^[0-9]/; // Regex to match a single digit
-    const result = head(cursor.remaining);
-    // TOOD: figure out the position of the parser at points of failure
+// }
+// const digit_parser: Parser<number> = (cursor) => { // TODO: change to a more specific type
+//     const pattern = /^[0-9]/; // Regex to match a single digit
+//     const result = head(cursor.remaining);
+//     // TOOD: figure out the position of the parser at points of failure
 
-    if (result.ok) {
-        const is_pattern = pattern.test(result.value[0])
-        const head_char = result.value[0];
-        const remaining = result.value[1];
+//     if (result.ok) {
+//         const is_pattern = pattern.test(result.value[0])
+//         const head_char = result.value[0];
+//         const remaining = result.value[1];
 
-        if (is_pattern) {
-            const c = {
-                ...cursor,
-                parsed: head_char, remaining: remaining, input: cursor.input, AST: []
-            };
-            return ok(c);
-        }
-        else {
-            return error<ParseError>({
-                message: `Error Parsing Digit: ${head_char}`, index: (cursor.input).indexOf(head_char), input: cursor.input,
-                name: ''
-            });
-        }
-    } else {
-        return result;
-    }
+//         if (is_pattern) {
+//             const c = {
+//                 ...cursor,
+//                 parsed: head_char, remaining: remaining, input: cursor.input, AST: []
+//             };
+//             return ok(c);
+//         }
+//         else {
+//             return error<ParseError>({
+//                 message: `Error Parsing Digit: ${head_char}`, index: (cursor.input).indexOf(head_char), input: cursor.input,
+//                 name: ''
+//             });
+//         }
+//     } else {
+//         return result;
+//     }
 
-}
+// }
 
 
 
@@ -162,19 +160,19 @@ const alphabet_parser: Parser<string> = (cursor) => {
 //     ));
 
 // Function that applies a parser to a string
-const eof_parser: Parser<""> = (cursor) => {
-    if (cursor.remaining.length == 0) {
-        const result = head(cursor.remaining)
-        const c = {
-            parsed: "", remaining: "", input: cursor.input
-        };
-        return ok(cursor);
-    }
-    return error<ParseError>({
-        message: "Error - Expected EOF", index: (cursor.input).indexOf(cursor.remaining), input: cursor.input,
-        name: ''
-    });
-}
+// const eof_parser: Parser<""> = (cursor) => {
+//     if (cursor.remaining.length == 0) {
+//         const result = head(cursor.remaining)
+//         const c = {
+//             parsed: "", remaining: "", input: cursor.input
+//         };
+//         return ok(cursor);
+//     }
+//     return error<ParseError>({
+//         message: "Error - Expected EOF", index: (cursor.input).indexOf(cursor.remaining), input: cursor.input,
+//         name: ''
+//     });
+// }
 
 function parse<T>(parser: Parser<T>, str: string): Result<ParserCursor<T>, ParseError> {
 
@@ -227,46 +225,46 @@ const mult_div_parser: Parser<"+" | "*"> = (cursor) => {
         return result;
     }
 }
-const eq_parser: Parser<"="> = (cursor) => {
-    const pattern = /^=/; // Regex to match a single digit
-    const result = head(cursor.remaining);
-    // TOOD: figure out the position of the parser at points of failure
+// const eq_parser: Parser<"="> = (cursor) => {
+//     const pattern = /^=/; // Regex to match a single digit
+//     const result = head(cursor.remaining);
+//     // TOOD: figure out the position of the parser at points of failure
 
-    if (result.ok) {
-        const is_pattern = pattern.test(result.value[0])
-        const head_char = result.value[0];
-        const remaining = result.value[1];
-        if (is_pattern) {
-            const c = {
-                ...cursor, parsed: head_char, remaining: remaining, input: cursor.input, AST: [{
-                    value: head_char,
-                    type: "KEYWORD",
-                    children: null
-                }]
-            };
-            return ok(c);
-        }
-        else {
-            return error<ParseError>({
-                message: `Error Parsing EQ: ${head_char}`, index: (cursor.input).indexOf(head_char), input: cursor.input,
-                name: ''
-            });
-        }
-    } else {
-        return result;
-    }
-};
-
+//     if (result.ok) {
+//         const is_pattern = pattern.test(result.value[0])
+//         const head_char = result.value[0];
+//         const remaining = result.value[1];
+//         if (is_pattern) {
+//             const c = {
+//                 ...cursor, parsed: head_char, remaining: remaining, input: cursor.input, AST: [{
+//                     value: head_char,
+//                     type: "KEYWORD",
+//                     children: null
+//                 }]
+//             };
+//             return ok(c);
+//         }
+//         else {
+//             return error<ParseError>({
+//                 message: `Error Parsing EQ: ${head_char}`, index: (cursor.input).indexOf(head_char), input: cursor.input,
+//                 name: ''
+//             });
+//         }
+//     } else {
+//         return result;
+//     }
+// };
+}
 // Literal Parsers
 const left_paran_parser = literal_parser("(")
 const right_paran_parser = literal_parser(")")
 
-const grammer_parser = Some(doSequence([alphabet_parser]))
+const grammer_parser = doSequence([alphabet_parser])
 
 // function / parser combinator
-export { doSequence, parse};
+export {parse};
 // parsers
-export { alphabet_parser,  left_paran_parser, right_paran_parser, grammer_parser, literal_parser, mult_div_parser, plus_minus_parser}
+export { alphabet_parser,  left_paran_parser, right_paran_parser, grammer_parser, mult_div_parser, plus_minus_parser}
 
 
 // Grammer rules as parser combinators
