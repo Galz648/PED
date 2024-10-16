@@ -6,20 +6,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TypeScript Text Editor</title>
     <link rel="stylesheet" href="src/styles.css">
+    <script defer src="//unpkg.com/mathlive"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #toolbar {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .editor-container {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            flex: 1;
+            padding: 10px;
+        }
+
+        math-field {
+            flex: 1;
+            padding: 10px;
+            border-right: 1px solid #ddd;
+        }
+
+        #editor {
+            flex: 1;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        .items-container {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
-
+    <div id="toolbar">
+        <button onclick="renderLatex()">Render LaTeX</button>
+        <button onclick="clearEditor()">Clear</button>
+    </div>
     <div class="editor-container">
-        <div id="compiled_expression" class="display-div">Your text will appear here...</div>
-        <div id="token_display" class="display-div"></div>
         <textarea id="editor" class="editor" placeholder="Type something..."></textarea>
+        <math-field>x=\frac{-b\pm \sqrt{b^2-4ac}}{2a}</math-field>
     </div>
 
     <script type="module" src="src/index.ts"></script>
     <!-- <script type="module" src="src/ws-server.ts"></script> -->
-
-
+    <script>
+        function renderLatex() {
+            // Add JavaScript function to render LaTeX
+        }
+        function clearEditor() {
+            document.getElementById('editor').value = '';
+        }
+    </script>
 </body>
 
 </html>
