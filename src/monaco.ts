@@ -11,3 +11,4 @@ monaco.editor.create(containerElement, {
   language: 'latex',
   theme: 'vs-dark'
 });
+
