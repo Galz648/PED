@@ -1,9 +1,5 @@
-// Import specific functions or objects
-
-
-
 import * as monaco from 'monaco-editor';
-import { registerLatexLanguage } from './latexConfig.js'; // Adjust the path as needed
+import { registerLatexLanguage } from './latexConfig.js'; 
 
 // Register the LaTeX language with Monaco
 registerLatexLanguage();

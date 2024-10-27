@@ -4,16 +4,24 @@
 <head>
 	<title>browser-amd-editor</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-	<h2>Monaco Editor Sample</h2>
-	<div id="container" style="width: 800px; height: 600px; border: 1px solid grey"></div>
+	<div id="app">
+		<div class="pane" id="left-pane">
+			<div id="container"></div>
+		</div>
+		<div class="pane" id="right-pane">
+			right pane
+		</div>
+
+	</div>
 
 	<!-- OR ANY OTHER AMD LOADER HERE INSTEAD OF loader.js -->
 	<script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
 	<script src="src/monaco.ts" type="module"></script>
+	<link rel="stylesheet" href="style.css">
 </body>
 
 </html>
-\
