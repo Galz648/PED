@@ -20,6 +20,8 @@
     "@types/ws": "^8.5.12",
     "@unified-latex/unified-latex": "^1.8.0",
     "http": "^0.0.1-security",
+    "monaco-editor": "^0.52.0",
+    "monaco-latex": "^0.0.1",
     "tex-math-parser": "^2.0.4",
     "typescript": "^5.5.4",
     "ws": "^8.18.0"
