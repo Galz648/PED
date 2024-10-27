@@ -1,8 +1,13 @@
-## TODO:
-### Proof of concepts
-* 
+##  How to run:
+`vite --open monaco.html`
 
-### UI 
-### monaco editor:
-   * create snippet example   
-   * latex syntax highlighting
+
+
+## Features
+* Basic LaTex syntax highlighting
+* Editor Snippet example
+
+
+## TODO:
+* split the screen into two panes (Monaco-editor, Cortex livemath)
+* make only the latex math sections to be rendered to livemath (To Be Determined)
