@@ -9,13 +9,13 @@ const editor = monaco.editor.getEditors()[0]
 
 
 editor.onDidChangeModelContent((event) => {
-    console.log("Content changed:", editor.getValue());
+    // console.log("Content changed:", editor.getValue());
     // monaco updates -> update mathlive state
 
     //TODO: fix "setValue does not exist on HTMLElement type error" (add appropriate type of exists)
     mf.setValue(
         editor.getValue(),
-        { silenceNotifications: false } // not sure what this is for
+        { silenceNotifications: true } // prevents auto-focus of math-field on state change
     )
 });
 
@@ -24,7 +24,11 @@ editor.onDidChangeModelContent((event) => {
 // TODO: fix type errors
 mf.addEventListener("input", (ev) => {
     // mathlive updates -> update monaco state
-    console.log(ev.target?.value);
+    // console.log(ev.target?.value);
     editor.setValue(ev.target?.value);
 })
 
+
+mf.addEventListener('beforeinput', (ev) => {
+    console.log(ev)
+  });
