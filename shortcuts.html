@@ -1,7 +1,149 @@
+<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathLive Shortcuts Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .tab-container {
+            margin: 20px 0;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: #e0e0e0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            gap: 10px;
+        }
+        .shortcut-input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .add-shortcut {
+            margin: 20px 0;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-btn {
+            padding: 5px 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .back-button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">Back to Menu</a>
+    <h1>MathLive Shortcuts Manager</h1>
 
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="switchTab('builtin')">Built-in Shortcuts</button>
+            <button class="tab-button" onclick="switchTab('custom')">Custom Shortcuts</button>
+        </div>
 
-<p>
-    foo bar
-</p>
+        <div id="builtin-tab" class="tab-content active">
+            <div id="builtin-shortcuts">
+                <!-- Built-in shortcuts will be populated here -->
+            </div>
+        </div>
+
+        <div id="custom-tab" class="tab-content">
+            <button class="add-shortcut" onclick="addNewShortcut()">Add New Shortcut</button>
+            <div id="custom-shortcuts">
+                <!-- Custom shortcuts will be managed here -->
+            </div>
+        </div>
+    </div>
+
+    <script defer src="//unpkg.com/mathlive"></script>
+    <script>
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab
+            document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        function addNewShortcut() {
+            const shortcutDiv = document.createElement('div');
+            shortcutDiv.className = 'shortcut-item';
+            shortcutDiv.innerHTML = `
+                <input type="text" class="shortcut-input" placeholder="Shortcut key" />
+                <input type="text" class="shortcut-input" placeholder="Command" />
+                <button class="delete-btn" onclick="this.parentElement.remove()">Delete</button>
+            `;
+            document.getElementById('custom-shortcuts').appendChild(shortcutDiv);
+        }
+
+        // Load built-in shortcuts when MathLive is ready
+        window.addEventListener('load', () => {
+            if (window.MathLive) {
+                const builtinShortcuts = MathLive.getBuiltinShortcuts();
+                const container = document.getElementById('builtin-shortcuts');
+                
+                Object.entries(builtinShortcuts).forEach(([key, value]) => {
+                    const shortcutDiv = document.createElement('div');
+                    shortcutDiv.className = 'shortcut-item';
+                    shortcutDiv.innerHTML = `
+                        <span>${key}</span>
+                        <span>${value}</span>
+                    `;
+                    container.appendChild(shortcutDiv);
+                });
+            }
+        });
+    </script>
+</body>
 </html>
+
