@@ -1,6 +1,5 @@
 ##  How to run:
-`vite`
-
+`vite --open index.html`
 
 
 ## Implemented Features
@@ -14,7 +13,6 @@
 whole word, change mode) [mathlive shortcuts](https://cortexjs.io/mathlive/guides/shortcuts/)
 * [x] - add option to serve multiple pages
 * [] - organize the html pages into proper directory
-* [] - splits the `shortcuts.html` file
 * [] - Handle proper resizing
 * [] - Add mathlive shortcut editing page
 * [] - make only the latex math sections to be rendered to livemath (To Be Determined)
