@@ -128,20 +128,6 @@
 
         // Load built-in shortcuts when MathLive is ready
         window.addEventListener('load', () => {
-            if (window.MathLive) {
-                const builtinShortcuts = MathLive.getBuiltinShortcuts();
-                const container = document.getElementById('builtin-shortcuts');
-                
-                Object.entries(builtinShortcuts).forEach(([key, value]) => {
-                    const shortcutDiv = document.createElement('div');
-                    shortcutDiv.className = 'shortcut-item';
-                    shortcutDiv.innerHTML = `
-                        <span>${key}</span>
-                        <span>${value}</span>
-                    `;
-                    container.appendChild(shortcutDiv);
-                });
-            }
         });
     </script>
 </body>
