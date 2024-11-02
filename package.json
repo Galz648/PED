@@ -2,7 +2,6 @@
   "name": "ped",
   "version": "1.0.0",
   "description": "An editor for solving physics homework",
-  "homepage": "https://galz648.github.io/PED",
   "scripts": {
     "dev": "vite",
     "deploy": "gh-pages -d dist"
