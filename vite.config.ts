@@ -6,7 +6,6 @@ export default defineConfig({
       input: {
         main: "./index.html",
         editor: './editor.html',
-        shortcuts: './shortcuts.html'
       }
     }
   },
