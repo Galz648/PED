@@ -2,7 +2,7 @@
 const deployButton = document.getElementById('share-button');
 
 if (!deployButton) {
-    throw new Error('Deploy button not found');
+    throw new Error('share button not found');
 }
 
 // // Add click event listener
