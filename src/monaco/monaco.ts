@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import { registerLatexLanguage, } from './LaTeX/syntax_highlight.ts'; 
+import { registerLatexLanguage} from './LaTeX/syntax_highlight.ts'; 
 import { registerLatexSnippets } from './LaTeX/snippets.ts'; 
 
 const containerElement = document.getElementById('container') as HTMLElement
@@ -7,15 +7,13 @@ const containerElement = document.getElementById('container') as HTMLElement
 // Register the LaTeX language with Monaco
 (function setup() {
   registerLatexLanguage();
-  registerLatexSnippets();
+  // registerLatexSnippets();
 })();
 
 // Initialize the Monaco Editor with LaTeX support
-export const editor = monaco.editor.create(containerElement, {
+const editor = monaco.editor.create(containerElement, {
   fontSize: 25,
-  value: `\\frac{A}{B}`,
+  value: `Here is markdown $$\\frac{1}{2}$$ and more text`,
   language: 'latex',
   theme: 'vs-dark'
 });
-
-

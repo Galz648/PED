@@ -1,8 +1,6 @@
-export const blockElementMap = {
+let blockElementMap: Map<number, HTMLElement> = new Map();
 
-}
-
-export interface Block {
+interface Block {
     type: 'markdown' | 'latex';
     content: string;
 }
@@ -10,7 +8,7 @@ export interface Block {
 /**
  * Creates a markdown block from the given content
  */
-export function createMarkdownBlock(content: string): Block {
+function createMarkdownBlock(content: string): Block {
     return {
         type: 'markdown',
         content: content.trim()
@@ -20,14 +18,14 @@ export function createMarkdownBlock(content: string): Block {
 /**
  * Creates a latex block from the given content
  */
-export function createLatexBlock(content: string): Block {
+function createLatexBlock(content: string): Block {
     return {
         type: 'latex',
         content: content.trim()
     };
 }
 
-export interface BlockIndices {
+interface BlockIndices {
     start: number;
     end: number;
     type: 'markdown' | 'latex';
@@ -36,14 +34,14 @@ export interface BlockIndices {
 /**
  * Finds all latex block indices in the text
  */
-export function findLatexBlockIndices(text: string): BlockIndices[] {
+function findLatexBlockIndices(text: string): BlockIndices[] {
     const indices: BlockIndices[] = [];
     let currentIndex = 0;
 
     while (currentIndex < text.length) {
         const latexStart = text.indexOf('$$', currentIndex);
         if (latexStart === -1) break;
-        
+
         const latexEnd = text.indexOf('$$', latexStart + 2);
         if (latexEnd === -1) break;
 
@@ -52,7 +50,7 @@ export function findLatexBlockIndices(text: string): BlockIndices[] {
             end: latexEnd,
             type: 'latex'
         });
-        
+
         currentIndex = latexEnd + 2;
     }
 
@@ -62,7 +60,7 @@ export function findLatexBlockIndices(text: string): BlockIndices[] {
 /**
  * Creates markdown block indices for the spaces between latex blocks
  */
-export function createAllBlockIndices(text: string, latexIndices: BlockIndices[]): BlockIndices[] {
+function createAllBlockIndices(text: string, latexIndices: BlockIndices[]): BlockIndices[] {
     const allIndices: BlockIndices[] = [];
     let currentIndex = 0;
 
@@ -75,7 +73,7 @@ export function createAllBlockIndices(text: string, latexIndices: BlockIndices[]
                 type: 'markdown'
             });
         }
-        
+
         allIndices.push(latex);
         currentIndex = latex.end + 2;
     }
@@ -95,10 +93,10 @@ export function createAllBlockIndices(text: string, latexIndices: BlockIndices[]
 /**
  * Creates blocks from the block indices
  */
-export function createBlocksFromIndices(text: string, indices: BlockIndices[]): Block[] {
+function createBlocksFromIndices(text: string, indices: BlockIndices[]): Block[] {
     return indices.map(index => {
         const content = text.slice(index.start, index.end);
-        return index.type === 'latex' 
+        return index.type === 'latex'
             ? createLatexBlock(content)
             : createMarkdownBlock(content);
     });
@@ -107,7 +105,7 @@ export function createBlocksFromIndices(text: string, indices: BlockIndices[]): 
 /**
  * Parses content into alternating blocks of markdown and latex
  */
-export function parseContent(rawText: string): Block[] {
+function parseContent(rawText: string): Block[] {
     const latexIndices = findLatexBlockIndices(rawText);
     const allBlockIndices = createAllBlockIndices(rawText, latexIndices);
     return createBlocksFromIndices(rawText, allBlockIndices);
@@ -134,14 +132,14 @@ export function parseContent(rawText: string): Block[] {
  * @param blocks Array of Block objects containing markdown and latex content
  * @returns Array of element configurations ready to be rendered
  */
-export interface ElementConfig {
+interface ElementConfig {
     type: 'div' | 'math-field';
     className: string;
     content: string;
     index: number; // Track original position
 }
 
-export function createElementConfigs(blocks: Block[]): ElementConfig[] {
+function createElementConfigs(blocks: Block[]): ElementConfig[] {
     return blocks.map((block, index) => {
         if (block.type === 'markdown') {
             return {
@@ -166,12 +164,12 @@ export function createElementConfigs(blocks: Block[]): ElementConfig[] {
  * @param configs Array of element configurations
  * @returns DocumentFragment containing the rendered HTML elements
  */
-export function renderElements(configs: ElementConfig[]): DocumentFragment {
+function renderElements(configs: ElementConfig[]): DocumentFragment {
     const fragment = document.createDocumentFragment();
-    
+
     // Sort configs by original index before rendering
     const orderedConfigs = [...configs].sort((a, b) => a.index - b.index);
-    
+
     orderedConfigs.forEach(config => {
         const element = document.createElement(config.type);
         element.className = config.className;
@@ -185,7 +183,7 @@ export function renderElements(configs: ElementConfig[]): DocumentFragment {
 
 function createBlockIndexElementMap(configs: ElementConfig[]): Map<number, HTMLElement> {
     const map = new Map<number, HTMLElement>();
-    
+
     configs.forEach(config => {
         const element = document.createElement(config.type);
         element.className = config.className;
@@ -195,13 +193,11 @@ function createBlockIndexElementMap(configs: ElementConfig[]): Map<number, HTMLE
 
     return map;
 }
+export function textToHtmlFragment(text: string): DocumentFragment {
 
-(() => {
-		const text = "Here is markdown $$\\frac{1}{2}$$ and more text";
-		const blocks = parseContent(text);
-		const configs = createElementConfigs(blocks);
-		let blockElementMap = createBlockIndexElementMap(configs);
-		const fragment = renderElements(configs);
-		console.log(`fragment: ${fragment}`);
-		document.getElementById('right-pane')!.appendChild(fragment);
-})();
+    const blocks = parseContent(text);
+    const configs = createElementConfigs(blocks);
+    blockElementMap = createBlockIndexElementMap(configs);
+    const fragment = renderElements(configs);
+    return fragment;
+}
