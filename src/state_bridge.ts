@@ -26,11 +26,11 @@ function updateRenderedView(editor: monaco.editor.ICodeEditor) {
 }
 
 // // Listen for content changes in the editor
-// editor.onDidChangeModelContent((event) => {
-//     updateRenderedView(editor);
-// });
+editor.onDidChangeModelContent((event) => {
+    updateRenderedView(editor);
+});
 
 // // Initial render
-// updateRenderedView(editor);
+updateRenderedView(editor);
 
 // 

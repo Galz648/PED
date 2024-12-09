@@ -2,42 +2,30 @@
 <html>
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- <button id="share-button" style="position: fixed; top: 10px; right: 10px; z-index: 1000; padding: 8px 16px;">Share</button> -->
-
-
+	<link rel="stylesheet" href="styles/editor.css">
 </head>
 
 <body>
-
-	<div id="app">
-
-
-		<div class="pane" id="left-pane">
-			<div id="container"></div>
-		</div>
-		<div class="pane" id="right-pane" style="width: 100%; height: 50%;font-size: 50px;">
-			<!-- <math-field id="formula"></math-field> -->
-			<div id="content"></div>
-		</div>
-
+	<div class="editor-container">
+		<div id="monaco-editor"></div>
+		<div id="preview-pane"></div>
 	</div>
-	<!-- OR ANY OTHER AMD LOADER HERE INSTEAD OF loader.js -->
-	<script defer src="//unpkg.com/mathlive"></script>
 	<script type="module">
-		import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
-		document.getElementById('content').innerHTML =
-			marked.parse('# Marked in browser\n\nRendered by **marked**.');
+		import { EditorBridge } from './state_bridge.js';
+		import { createRoot } from 'react-dom/client';
+		import { PreviewPane } from './components/Editor.js';
+		import * as monaco from 'monaco-editor';
+
+		const editor = monaco.editor.create(
+			document.getElementById('monaco-editor'),
+			{ language: 'markdown' }
+		);
+
+		const previewRoot = createRoot(document.getElementById('preview-pane'));
+		previewRoot.render(React.createElement(PreviewPane));
+
+		new EditorBridge(editor, document.getElementById('preview-pane'));
 	</script>
-	<!-- not sure if this is needed or not -->
-	<!-- <script src="node_modules/monaco-editor/min/vs/loader.js"></script> -->
-	<!-- <script src="src/cortex/keybindings.ts" type="module"></script> -->
-	<script src="src/monaco/monaco.ts" type="module"></script>
-	<script src="src/editor_share.ts" type="module"></script>
-	<script src="src/state_bridge.ts" type="module"></script>
-	<script src="src/encoder.ts" type="module"></script>
-	<link rel="stylesheet" href="public/style.css">
 </body>
 
 </html>

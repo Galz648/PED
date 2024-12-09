@@ -5,8 +5,10 @@
   "description": "An editor for solving physics homework",
   "homepage": "https://galz648.github.io/PED/index.html",
   "scripts": {
-    "dev": "vite --open index.html",
-    "deploy": "gh-pages -d dist"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "repository": {
     "type": "git",
@@ -21,11 +23,19 @@
     "@cortex-js/compute-engine": "^0.26.4",
     "@editorjs/editorjs": "^2.30.6",
     "@types/node": "^20.14.12",
+    "marked": "^15.0.3",
     "mathlive": "^0.101.1",
     "monaco-editor": "^0.52.0",
+    "next": "^15.0.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rxjs": "^7.8.1",
     "typescript": "^5.5.4"
   },
   "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/rx": "^4.1.4",
     "vite": "^5.3.5"
   }
 }
