@@ -2,7 +2,11 @@
   "name": "ped",
   "version": "1.0.0",
   "description": "An editor for solving physics homework",
-  "scripts": {},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/galz648/PED.git"
@@ -14,11 +18,18 @@
   },
   "homepage": "https://github.com/galz648/PED#readme",
   "dependencies": {
-    "@types/node": "^20.14.12",
+    "@types/marked": "^6.0.0",
+    "@types/next": "^9.0.0",
+    "@types/node": "^20.17.9",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
     "@unified-latex/unified-latex": "^1.8.0",
+    "marked": "^15.0.3",
     "monaco-editor": "^0.52.0",
+    "next": "^15.0.4",
+    "rxjs": "^7.8.1",
     "tex-math-parser": "^2.0.4",
-    "typescript": "^5.5.4"
+    "typescript": "^5.7.2"
   },
   "devDependencies": {
     "vite": "^5.3.5"
