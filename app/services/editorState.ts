@@ -8,20 +8,8 @@ class EditorState {
 
     public content$ = this.contentSubject.asObservable();
     public blocks$ = this.blocksSubject.asObservable();
-    // TODO: make function private, use the updateContent function to update the content and blocks subjects
-    // TODO: should probably be static
-    public blocksToHtml(blocks: Block[]): HTMLElement[] {
-        return blocks.map((block) => {
-            const htmlBlock = document.createElement('div');
-            if (block.type === 'markdown') {
-                htmlBlock.innerHTML = marked(block.content).toString();
-            } else if (block.type === 'latex') {
-                htmlBlock.innerHTML = block.content;
-            }
-            return htmlBlock;
-        });
-    }
     
+    // TODO: make function private, use the updateContent function to update the content and blocks subjects
     public updateContent(content: string): void {
         /* 
             Update the content and blocks subjects.

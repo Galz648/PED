@@ -11,11 +11,11 @@ const EditorContainer = () => {
     const [editorContent, setEditorContent] = useState(default_text);
     const [previewContent, setPreviewContent] = useState<Block[]>([]);
     // TODO: add debounce
+    
     const handleContentChange = (newContent: string) => {
         setEditorContent(newContent);
         console.log(newContent);
         const blocks = editorState.parseContent(newContent);
-        console.log(blocks);
         setPreviewContent(blocks);
     };
     // TODO: move this to an appropriate style file

@@ -1,5 +1,5 @@
 "use client"
-
+import MdView from "./mdView"
 import React from "react";
 import { Block } from "../types/Block";
 interface renderProps {
@@ -8,10 +8,21 @@ interface renderProps {
     style?: React.CSSProperties;
     id?: string;
 }
-export const RenderView = ({ blocks, onChange, style, id}: renderProps) => {
+export const RenderView = ({ blocks, onChange, style, id }: renderProps) => {
+
     return <div style={style} id={id}>
         {blocks.map((block, index) => {
-            return <div key={index}>{`renderer: ${block.type}`}<br />{block.content}</div>;
+            block.type ? "markdown" : "latex "
+            return (
+                <div key={index}>
+                    {block.type === "markdown" ? (
+                        <MdView content={block.content} />
+                    ) : (
+                    <div>{block.content}</div>
+                )}
+                </div>
+            );
         })}
+
     </div>;
 };
