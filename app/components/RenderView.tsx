@@ -8,10 +8,10 @@ interface renderProps {
     style?: React.CSSProperties;
     id?: string;
 }
-export const RenderView = ({ blocks, onChange, style, id }: renderProps) => {
+export const RenderView = ({ blocks, onChange, style, id}: renderProps) => {
     return <div style={style} id={id}>
-        {/* {blocks.map((block) => {
-            return <div key={block.id}>{block.content}</div>;
-        })} */}
+        {blocks.map((block, index) => {
+            return <div key={index}>{`renderer: ${block.type}`}<br />{block.content}</div>;
+        })}
     </div>;
 };
