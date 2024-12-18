@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import { editorState } from './services/EditorState.js';
+import { editorState } from './services/EditorState.ts';
 
 export class EditorBridge {
     constructor(

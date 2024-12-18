@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as monaco from 'monaco-editor';
-import { EditorBridge } from './state_bridge.js';
+import { EditorBridge } from './state_bridge.ts';
 import { PreviewPane } from './components/editor.tsx';
 
 const EditorPage: React.FC = () => {

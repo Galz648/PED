@@ -8,23 +8,23 @@
 <body>
 	<div class="editor-container">
 		<div id="monaco-editor"></div>
-		<div id="preview-pane"></div>
+		<!-- <div id="preview-pane"></div> -->
 	</div>
 	<script type="module">
-		import { EditorBridge } from './state_bridge.js';
-		import { createRoot } from 'react-dom/client';
-		import { PreviewPane } from './components/Editor.js';
+		import { EditorBridge } from './state_bridge.ts';
 		import * as monaco from 'monaco-editor';
+		// import { createRoot } from 'react-dom/client';
+		// import { PreviewPane } from './components/Editor.tsx';
 
 		const editor = monaco.editor.create(
 			document.getElementById('monaco-editor'),
 			{ language: 'markdown' }
 		);
 
-		const previewRoot = createRoot(document.getElementById('preview-pane'));
-		previewRoot.render(React.createElement(PreviewPane));
+		// const previewRoot = createRoot(document.getElementById('preview-pane'));
+		// previewRoot.render(React.createElement(PreviewPane));
 
-		new EditorBridge(editor, document.getElementById('preview-pane'));
+		// new EditorBridge(editor, document.getElementById('preview-pane'));
 	</script>
 </body>
 
