@@ -6,12 +6,12 @@ import { RenderView } from "./RenderView.tsx";
 import { editorState } from "../services/EditorState.ts";
 import { Block } from "../types/Block.ts";
 
-const default_text = "what about this $$ frac{A}{B} $$";
+const default_text = "what about this";
 const EditorContainer = () => {
     const [editorContent, setEditorContent] = useState(default_text);
     const [previewContent, setPreviewContent] = useState<Block[]>([]);
     // TODO: add debounce
-    
+
     const handleContentChange = (newContent: string) => {
         setEditorContent(newContent);
         console.log(newContent);

@@ -1,9 +1,9 @@
 "use client"
 import React from "react";
-import { marked } from 'marked';
+import ReactMarkdown from "react-markdown";
 
 const MdView = ({ content }: { content: string }) => {
-    return <div>{marked.parse(`**${content}**`, { async: false })}</div>;
+    return <ReactMarkdown>{`${content}`}</ReactMarkdown>;
 };
 
 export default MdView;
