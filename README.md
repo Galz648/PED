@@ -1,6 +1,5 @@
 ##  How to run:
-`vite --open monaco.html`
-
+`vite --open index.html`
 
 
 ## Implemented Features
@@ -9,8 +8,11 @@
 
 
 ## TODO:
-* split the screen into two panes (Monaco-editor, Cortex livemath) - DONE
-* have the monaco editor reflect what is inside the mathlive block and vice versa - DONE
-* add shortcuts for editing the mathlive `math-field` (delete whole word, change mode) [mathlive shortcuts](https://cortexjs.io/mathlive/guides/shortcuts/)
-* organize the project files into mathlive, monaco, and shared code.
-* make only the latex math sections to be rendered to livemath (To Be Determined)
+* [x] - split the screen into two panes (Monaco-editor, Cortex livemath)
+* [x] - have the monaco editor reflect what is inside the mathlive block and vice versa
+whole word, change mode) [mathlive shortcuts](https://cortexjs.io/mathlive/guides/shortcuts/)
+* [x] - add option to serve multiple pages
+* [] - organize the html pages into proper directory
+* [] - Handle proper resizing
+* [] - Add mathlive shortcut editing page
+* [] - make only the latex math sections to be rendered to livemath (To Be Determined)

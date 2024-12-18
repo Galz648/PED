@@ -16,7 +16,6 @@
   "bugs": {
     "url": "https://github.com/galz648/PED/issues"
   },
-  "homepage": "https://github.com/galz648/PED#readme",
   "dependencies": {
     "@types/marked": "^6.0.0",
     "@types/next": "^9.0.0",
@@ -32,6 +31,7 @@
     "typescript": "^5.7.2"
   },
   "devDependencies": {
+    "gh-pages": "^6.2.0",
     "vite": "^5.3.5"
   }
 }

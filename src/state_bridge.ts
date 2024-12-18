@@ -1,12 +1,21 @@
+
 import * as monaco from 'monaco-editor';
 
+
 // TODO: add error handling to missing elements
-const mf = document.getElementById("formula")!
+const mf = document.getElementById("formula")
 const editor = monaco.editor.getEditors()[0]
 // editor.onDidChangeCursorPosition((e) => {
 //     console.log(JSON.stringify(e));
 // })
 
+// set the value of the MathLive element on startup
+document.addEventListener("DOMContentLoaded", () => {
+    mf.setValue(
+        editor.getValue(),
+        { silenceNotifications: true } // prevents auto-focus of math-field on state change
+    )
+});
 
 editor.onDidChangeModelContent((event) => {
     // console.log("Content changed:", editor.getValue());
@@ -31,4 +40,4 @@ mf.addEventListener("input", (ev) => {
 
 mf.addEventListener('beforeinput', (ev) => {
     console.log(ev)
-  });
+});
