@@ -1,7 +1,8 @@
 "use client"
-import MdView from "./mdView"
+import MdView from "./mdView.tsx"
 import React from "react";
-import { Block } from "../types/Block";
+import { Block } from "../types/Block.ts";
+import MathliveBlock from "./MathliveContainer.tsx";
 interface renderProps {
     blocks: Block[];
     onChange: (newContent: string) => void;
@@ -18,7 +19,9 @@ export const RenderView = ({ blocks, onChange, style, id }: renderProps) => {
                     {block.type === "markdown" ? (
                         <MdView content={block.content} />
                     ) : (
-                    <div>{block.content}</div>
+                    // <div>latex block:   {block.content}</div>
+
+                        <MathliveBlock />
                 )}
                 </div>
             );

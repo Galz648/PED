@@ -1,6 +1,5 @@
 import { BehaviorSubject } from "rxjs";
 import { Block, BlockType } from "../types/Block.ts";
-import { marked } from "marked";
 
 class EditorState {
     private contentSubject = new BehaviorSubject<string>('');
@@ -8,7 +7,7 @@ class EditorState {
 
     public content$ = this.contentSubject.asObservable();
     public blocks$ = this.blocksSubject.asObservable();
-    
+
     // TODO: make function private, use the updateContent function to update the content and blocks subjects
     public updateContent(content: string): void {
         /* 

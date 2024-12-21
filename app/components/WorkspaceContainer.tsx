@@ -6,7 +6,7 @@ import { RenderView } from "./RenderView.tsx";
 import { editorState } from "../services/EditorState.ts";
 import { Block } from "../types/Block.ts";
 
-const default_text = "what about this";
+const default_text = "$$ foo bar $$";
 const EditorContainer = () => {
     const [editorContent, setEditorContent] = useState(default_text);
     const [previewContent, setPreviewContent] = useState<Block[]>([]);
