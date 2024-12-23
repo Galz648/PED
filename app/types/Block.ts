@@ -1,7 +1,7 @@
 type BlockType = 'markdown' | 'latex';
 
 interface Block {
-    id: string;
+    id: number;
     type: BlockType;
     content: string;
 }

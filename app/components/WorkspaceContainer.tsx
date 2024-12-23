@@ -1,23 +1,35 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import { EditorView } from "./EditorView.tsx";
 import { RenderView } from "./RenderView.tsx";
-import { editorState } from "../services/EditorState.ts";
-import { Block } from "../types/Block.ts";
+import { reducer } from "../reducers/stateReducer.ts";
+import { Block } from "../types/block.ts";
+import { State } from "../types/state.ts";
 
-const default_text = "$$ foo bar $$";
+
 const EditorContainer = () => {
-    const [editorContent, setEditorContent] = useState(default_text);
-    const [previewContent, setPreviewContent] = useState<Block[]>([]);
-    // TODO: add debounce
 
-    const handleContentChange = (newContent: string) => {
-        setEditorContent(newContent);
-        console.log(newContent);
-        const blocks = editorState.parseContent(newContent);
-        setPreviewContent(blocks);
-    };
+    
+    
+    const initialState: State= {
+        editorContent: "markdown $$ foo bar $$ some more markdown $$ foo bar $$",
+        blocks: []
+    }
+
+    const [editorContent, setEditorContent] = useState(initialState.editorContent);
+    const [blocks, setBlocks] = useState<Block[]>(initialState.blocks);
+    
+    // TODO: make this a reducer
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    // useEffect - change to editor content
+
+    useEffect(() => {
+        setEditorContent(state.editorContent);
+        setBlocks(state.blocks);
+    }, [state]);
+
     // TODO: move this to an appropriate style file
     const paneStyle = {
         width: '50%',
@@ -29,8 +41,8 @@ const EditorContainer = () => {
     return (
         <div className="editor-container"
             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <EditorView content={editorContent} onChange={handleContentChange} style={paneStyle} id="editor-pane" />
-            <RenderView blocks={previewContent} onChange={handleContentChange} style={paneStyle} id="render-pane" />
+            <EditorView content={editorContent} state={state} dispatch={dispatch} style={paneStyle} id="editor-pane" />
+            <RenderView blocks={blocks} state={state} dispatch={dispatch} style={paneStyle} id="render-pane" />
         </div>
     );
 };

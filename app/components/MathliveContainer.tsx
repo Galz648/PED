@@ -1,9 +1,11 @@
+import { State } from '../types/state.ts';
+import { Action } from '../reducers/stateReducer.ts';
+import { Block } from '../types/block.ts';
 import './App.css'
 
 
-
-import { useState, useRef, useEffect } from 'react'
-import { MathfieldElement } from 'mathlive'
+// import { MathfieldComponent } from "react-mathlive";
+import { useState, useRef, useEffect, Dispatch } from 'react'
 import React from 'react'
 
 declare global {
@@ -16,8 +18,9 @@ declare global {
 
 
 
-function MathliveBlock() {
-  const [value, setValue] = useState('\\sqrt{x}')
+function MathliveBlock({ block, state, dispatch }: { block: Block, state: State, dispatch: Dispatch<Action> }) {
+  // const [value, setValue] = useState('\\sqrt{x}')
+  // const [value, _] = useState(initialValue)
 
   // Customize the mathfield when it is mounted
   const mf = useRef<MathfieldElement>(null)
@@ -42,17 +45,19 @@ function MathliveBlock() {
   // Update the mathfield when the value changes
   useEffect(() => {
     // TODO: make sure mf and current are not null
-    mf!.current!.value = value
-  }, [value])
+    mf!.current!.value = block.content
+    // given the appropriate block information
+    console.log(block)
+    // update the editor content
+  }, [block])
 
- return (
-    <div className='App'>
-      <h1>MathLive with React: PED</h1>
-      <math-field ref={mf} onInput={(evt) => console.log(evt.target)}>
-        {value}
-      </math-field>
-      <code>Value: {value}</code>
-    </div>
+
+  return (
+    <math-field ref={mf} onInput={(evt) => {
+      console.log(evt.target.value)
+    }}>
+      {mf.current?.value}
+    </math-field>
   )
 }
 
