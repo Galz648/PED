@@ -1,0 +1,9 @@
+{
+  "handler": "api/hello.js",
+  "runtime": "nodejs20.x",
+  "environment": {},
+  "launcherType": "Nodejs",
+  "shouldAddHelpers": true,
+  "shouldAddSourcemapSupport": true,
+  "awsLambdaHandler": ""
+}
