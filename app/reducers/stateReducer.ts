@@ -13,30 +13,39 @@ interface Action {
 function contentToBlocks(text: string): Block[] {
     return text.split(/(\$\$.*?\$\$)/s).map((part, index) => {
         const type: BlockType = part.startsWith('$$') && part.endsWith('$$') ? 'latex' : 'markdown';
+        // remove the surrounding latex tags ($$ $$)
         const content = part.replace(/^\$\$|\$\$$/g, '');
         return { id: index, type, content };
-    }).filter(block => block.content.trim());
+    })
+    .filter(block => block.content.trim());
+}
+
+function blocksToContent(blocks: Block[]): string {
+
+    // return blocks.map(block => block.content).join("\n");
+    // add the surrounding latex tags ($$ $$) to latex blocks
+    return blocks.map(block =>
+        block.type === 'latex' ? `$$ ${block.content} $$` : block.content
+    ).join("\n");
+}
+
+function updateBlock(state: State, id: number, newContent: string): State {
+    const updatedBlocks = state.blocks.map(block =>
+        block.id === id ? { ...block, content: newContent } : block
+    );
+    const updatedEditorContent = blocksToContent(updatedBlocks);
+    return { ...state, blocks: updatedBlocks, editorContent: updatedEditorContent };
 }
 
 function reducer(state: State, action: Action) {
-
+    console.log(action)
     switch (action.type) {
-        case "UPDATE_BLOCK": {
+        case ActionType.UPDATE_BLOCK: {
+            // id and new content inside the block
             const { id, newContent } = action.payload;
-
-            const updatedBlocks = state.blocks.map(block =>
-                block.id === id ? { ...block, content: newContent } : block
-            );
-
-            const updatedEditorContent = updatedBlocks.map(block => block.content).join("\n");
-
-            return {
-                ...state,
-                blocks: updatedBlocks,
-                editorContent: updatedEditorContent
-            };
+            return updateBlock(state, id, newContent);
         }
-        case "UPDATE_EDITOR_CONTENT": {
+        case ActionType.UPDATE_EDITOR_CONTENT: {
             const { newContent } = action.payload;
             return {
                 ...state,

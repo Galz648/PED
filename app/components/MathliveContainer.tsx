@@ -1,5 +1,5 @@
 import { State } from '../types/state.ts';
-import { Action } from '../reducers/stateReducer.ts';
+import { Action, ActionType } from '../reducers/stateReducer.ts';
 import { Block } from '../types/block.ts';
 import './App.css'
 
@@ -42,21 +42,12 @@ function MathliveBlock({ block, state, dispatch }: { block: Block, state: State,
   //   // })
   // }, [])
 
-  // Update the mathfield when the value changes
-  useEffect(() => {
-    // TODO: make sure mf and current are not null
-    mf!.current!.value = block.content
-    // given the appropriate block information
-    console.log(block)
-    // update the editor content
-  }, [block])
-
-
+  // TODO: consider adding a debounce for performance
   return (
     <math-field ref={mf} onInput={(evt) => {
-      console.log(evt.target.value)
+      dispatch({ type: ActionType.UPDATE_BLOCK, payload: { id: block.id, newContent: evt.target.value } })
     }}>
-      {mf.current?.value}
+      {block.content}
     </math-field>
   )
 }
