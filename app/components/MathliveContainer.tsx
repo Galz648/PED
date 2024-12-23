@@ -18,7 +18,7 @@ declare global {
 
 
 
-function MathliveBlock({ block, state, dispatch }: { block: Block, state: State, dispatch: Dispatch<Action> }) {
+function MathliveBlock({ block, state, dispatch, style }: { block: Block, state: State, dispatch: Dispatch<Action>, style?: React.CSSProperties }) {
   // const [value, setValue] = useState('\\sqrt{x}')
   // const [value, _] = useState(initialValue)
 
@@ -46,7 +46,7 @@ function MathliveBlock({ block, state, dispatch }: { block: Block, state: State,
   return (
     <math-field ref={mf} onInput={(evt) => {
       dispatch({ type: ActionType.UPDATE_BLOCK, payload: { id: block.id, newContent: evt.target.value } })
-    }}>
+    }} style={style}>
       {block.content}
     </math-field>
   )
