@@ -31,6 +31,19 @@ export function registerLatexSnippets(monaco: Monaco) {
                         startColumn: wordRange.startColumn,
                         endColumn: wordRange.endColumn
                     }
+                },
+                {
+                    label: 'latex',
+                    kind: monaco.languages.CompletionItemKind.Snippet,
+                    insertText: '$$ ${1:equation} $$',
+                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    documentation: 'Insert a math block: $$ $$',
+                    range: {
+                        startLineNumber: position.lineNumber,
+                        endLineNumber: position.lineNumber,
+                        startColumn: wordRange.startColumn,
+                        endColumn: wordRange.endColumn
+                    }
                 }
             ];
             return { suggestions };
