@@ -7,7 +7,7 @@ export function registerLatexLanguage(monaco: Monaco) {
 
     // Define LaTeX syntax highlighting rules
     monaco.languages.setMonarchTokensProvider('latex', {
-        keywords: ['\\begin', '\\end', '\\section', '\\textbf', '\\textit', '\\item', '\\title', '\\author', '\\date', '\\frac'],
+        keywords: ['\\frac', '\\sum', '$$'],
         tokenizer: {
             root: [
                 [/\\[a-zA-Z]+/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
