@@ -1,23 +1,40 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import { EditorView } from "./EditorView.tsx";
 import { RenderView } from "./RenderView.tsx";
-import { editorState } from "../services/EditorState.ts";
-import { Block } from "../types/Block.ts";
+import { ActionType, reducer } from "../reducers/stateReducer.ts";
+import { Block } from "../types/block.ts";
+import { State } from "../types/state.ts";
 
-const default_text = "what about this";
+
 const EditorContainer = () => {
-    const [editorContent, setEditorContent] = useState(default_text);
-    const [previewContent, setPreviewContent] = useState<Block[]>([]);
-    // TODO: add debounce
 
-    const handleContentChange = (newContent: string) => {
-        setEditorContent(newContent);
-        console.log(newContent);
-        const blocks = editorState.parseContent(newContent);
-        setPreviewContent(blocks);
-    };
+
+
+    const initialState: State = {
+        editorContent: "markdown $$ foo bar $$ some more markdown $$ foo bar $$",
+        blocks: []
+    }
+
+    const [editorContent, setEditorContent] = useState(initialState.editorContent);
+    const [blocks, setBlocks] = useState<Block[]>(initialState.blocks);
+
+    // TODO: make this a reducer
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    // activate processing on initial load
+    useEffect(() => {
+        dispatch({ type: ActionType.UPDATE_EDITOR_CONTENT, payload: { newContent: editorContent } })
+    }, []);
+
+
+    // when the state changes, update the editor content and the blocks
+    useEffect(() => {
+        console.log(state)
+        console.log("state changed")
+    }, [state]);
+
     // TODO: move this to an appropriate style file
     const paneStyle = {
         width: '50%',
@@ -29,8 +46,8 @@ const EditorContainer = () => {
     return (
         <div className="editor-container"
             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <EditorView content={editorContent} onChange={handleContentChange} style={paneStyle} id="editor-pane" />
-            <RenderView blocks={previewContent} onChange={handleContentChange} style={paneStyle} id="render-pane" />
+            <EditorView content={state.editorContent} state={state} dispatch={dispatch} style={paneStyle} id="editor-pane" />
+            <RenderView blocks={state.blocks} state={state} dispatch={dispatch} style={paneStyle} id="render-pane" />
         </div>
     );
 };

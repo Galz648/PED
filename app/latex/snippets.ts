@@ -1,6 +1,6 @@
-import * as monaco from 'monaco-editor';
+import type { Monaco } from "@monaco-editor/react";
 
-export function registerLatexSnippets() {
+export function registerLatexSnippets(monaco: Monaco) {
     // Add a snippet for \frac
     monaco.languages.registerCompletionItemProvider('latex', {
         provideCompletionItems: (model, position) => {
