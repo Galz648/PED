@@ -7,11 +7,10 @@ import './App.css'
 // import { MathfieldComponent } from "react-mathlive";
 import { useState, useRef, useEffect, Dispatch } from 'react'
 import React from 'react'
-
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      'math-field': React.DetailedHTMLProps<React.HTMLAttributes<MathfieldElement>, MathfieldElement>;
+      'math-field': React.DetailedHTMLProps<React.HTMLAttributes<any>, any>;
     }
   }
 }
@@ -23,7 +22,7 @@ function MathliveBlock({ block, state, dispatch, style }: { block: Block, state:
   // const [value, _] = useState(initialValue)
 
   // Customize the mathfield when it is mounted
-  const mf = useRef<MathfieldElement>(null)
+  const mf = useRef<any>(null)
   // useEffect(() => {
   //   // Read more about customizing the mathfield: https://cortexjs.io/mathlive/guides/customizing/
   //   // TODO: make sure mf and current are not null
@@ -44,10 +43,12 @@ function MathliveBlock({ block, state, dispatch, style }: { block: Block, state:
 
   // TODO: consider adding a debounce for performance
   return (
+    // @ts-ignore
     <math-field ref={mf} onInput={(evt) => {
       dispatch({ type: ActionType.UPDATE_BLOCK, payload: { id: block.id, newContent: evt.target.value } })
     }} style={style}>
       {block.content}
+      {/* @ts-ignore */}
     </math-field>
   )
 }
