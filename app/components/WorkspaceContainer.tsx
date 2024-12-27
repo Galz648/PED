@@ -6,28 +6,33 @@ import { RenderView } from "./RenderView.tsx";
 import { ActionType, reducer } from "../reducers/stateReducer.ts";
 import { Block } from "../types/block.ts";
 import { State } from "../types/state.ts";
+import { useCookies } from "react-cookie";
 
 
 const EditorContainer = () => {
-
+    const [cookies, setCookie] = useCookies(['workspace']);
 
 
     const initialState: State = {
-        editorContent: "markdown $$ foo bar $$ some more markdown $$ foo bar $$",
+        editorContent: cookies.workspace || "",
         blocks: []
     }
+    // TODO: make this a reducer
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     const [editorContent, setEditorContent] = useState(initialState.editorContent);
     const [blocks, setBlocks] = useState<Block[]>(initialState.blocks);
 
-    // TODO: make this a reducer
-    const [state, dispatch] = useReducer(reducer, initialState);
 
     // activate processing on initial load
     useEffect(() => {
         dispatch({ type: ActionType.UPDATE_EDITOR_CONTENT, payload: { newContent: editorContent } })
     }, []);
 
+    useEffect(() => {
+        console.log("setting cookie")
+        setCookie('workspace', state.editorContent)
+    }, [state.editorContent]);
 
     // when the state changes, update the editor content and the blocks
     useEffect(() => {
