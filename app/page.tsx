@@ -8,8 +8,9 @@ import React from 'react';
 const Home: FC = () => {
     return (
 
+        // work around how to import mathlive
         <main>
-            <script defer src='//unpkg.com/mathlive'></script>
+            <script defer src='https://unpkg.com/mathlive'></script>
             <EditorContainer />
         </main>
     );
