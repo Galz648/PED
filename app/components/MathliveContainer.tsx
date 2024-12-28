@@ -45,6 +45,7 @@ function MathliveBlock({ block, state, dispatch, style }: { block: Block, state:
   return (
     // @ts-ignore
     <math-field ref={mf} onInput={(evt) => {
+      // TODO: lift this up to the WorkspaceContainer
       dispatch({ type: ActionType.UPDATE_BLOCK, payload: { id: block.id, newContent: evt.target.value } })
     }} style={style}>
       {block.content}
