@@ -33,6 +33,7 @@ function splitIntoParagraphs(text: string): string[] {
 }
 
 export function parse(input: string): string[] {
+    // TODO: consider removing - not used atm
     currentId = 0; // Reset ID counter
     const paragraphs = splitIntoParagraphs(input);
 

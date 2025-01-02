@@ -17,7 +17,7 @@ import React from 'react'
 
 
 
-function MathliveBlock({ content}: { content: string}) {
+function MathliveBlock({ content, dispatch, id}: { content: string, dispatch: Dispatch<Action>, id: string}) {
   // Customize the mathfield when it is mounted
   const mf = useRef<any>(null)
   // useEffect(() => {
@@ -42,7 +42,8 @@ function MathliveBlock({ content}: { content: string}) {
   return (
     // @ts-ignore
     <math-field ref={mf} onInput={(evt) => {
-      // TODO: lift this up to the WorkspaceContaine
+      // TODO: lift this up to the WorkspaceContainer
+      dispatch({ type: ActionType.UPDATE_BLOCK, payload: { id: id, newContent: evt.target.value, oldContent: content } })
     }}>
       {content}
       {/* @ts-ignore */}

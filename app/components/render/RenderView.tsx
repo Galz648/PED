@@ -13,7 +13,7 @@ interface RenderViewProps {
   id?: string;
 }
 
-export const RenderView = ({ blocks, state, dispatch, style, id }: RenderViewProps) => {
+export const RenderView = ({ state, dispatch, style, id }: RenderViewProps) => {
   const mdStyle = {
     backgroundColor: '#f0f0f0',
     padding: '10px',
@@ -33,11 +33,10 @@ export const RenderView = ({ blocks, state, dispatch, style, id }: RenderViewPro
   // TODO: move the rendering logic to the RenderContainer
   return (
     <div style={style} id={id}>
-      {blocks.map((block, index) => (
+      {/* {blocks.map((block, index) => (
         <div key={index}>
-          <MdView content={block.content} />
-        </div>
-      ))}
+          <MdView content={block.content} dispatch={dispatch} id={block.id.toString()} /> */}
+      <MdView content={state.editorContent} dispatch={dispatch} id={"placeholder_id"}/>
     </div>
   );
 };

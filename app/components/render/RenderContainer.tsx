@@ -17,7 +17,7 @@ export const RenderContainer = ({ state, dispatch, style, id }: RenderContainerP
 
     return (
         <RenderView
-            blocks={blocks}
+            // blocks={blocks}
             state={state}
             dispatch={dispatch}
             style={style}

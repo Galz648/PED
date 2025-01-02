@@ -31,7 +31,11 @@ export const EditorContainer = ({ state, dispatch, style, id }: EditorContainerP
         if (value !== undefined) {
             dispatch({
                 type: ActionType.UPDATE_EDITOR_CONTENT,
-                payload: { newContent: value }
+                payload: { 
+                    
+                    newContent: value,
+                    oldContent: state.editorContent
+                }
             });
         }
     };
