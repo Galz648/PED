@@ -10,8 +10,7 @@ export interface Block {
     id: number | string;
     type: BlockType;
     content: string;
-    children?: Block[];
-    accept(visitor: Visitor): ReactNode;
+
 }
 
 export interface InlineLatexBlock extends Block {
@@ -20,5 +19,4 @@ export interface InlineLatexBlock extends Block {
 
 export interface MarkdownBlock extends Block {
     type: 'markdown';
-    children: InlineLatexBlock[];
 } 

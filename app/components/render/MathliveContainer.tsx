@@ -1,24 +1,23 @@
 import { State } from '../../types/state.ts';
 import { Action, ActionType } from '../../reducers/syncReducer.ts';
-import { Block } from '../../core/blocks/types.ts';
-import './App.css'
+import { Block } from '../../lib/blocks/types.ts';
+import '../App.css'
 
 
 // import { MathfieldComponent } from "react-mathlive";
 import { useState, useRef, useEffect, Dispatch } from 'react'
 import React from 'react'
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'math-field': React.DetailedHTMLProps<React.HTMLAttributes<any>, any>;
-    }
-  }
-}
+// declare global {
+//   namespace JSX {
+//     interface IntrinsicElements {
+//       'math-field': React.DetailedHTMLProps<React.HTMLAttributes<any>, any>;
+//     }
+//   }
+// }
 
 
 
-function MathliveBlock({ block, state, dispatch, style }: { block: Block, state: State, dispatch: Dispatch<Action>, style?: React.CSSProperties }) {
-
+function MathliveBlock({ content}: { content: string}) {
   // Customize the mathfield when it is mounted
   const mf = useRef<any>(null)
   // useEffect(() => {
@@ -43,10 +42,9 @@ function MathliveBlock({ block, state, dispatch, style }: { block: Block, state:
   return (
     // @ts-ignore
     <math-field ref={mf} onInput={(evt) => {
-      // TODO: lift this up to the WorkspaceContainer
-      dispatch({ type: ActionType.UPDATE_BLOCK, payload: { id: block.id, newContent: evt.target.value } })
-    }} style={style}>
-      {block.content}
+      // TODO: lift this up to the WorkspaceContaine
+    }}>
+      {content}
       {/* @ts-ignore */}
     </math-field>
   )

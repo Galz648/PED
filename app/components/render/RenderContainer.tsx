@@ -3,7 +3,7 @@ import React, { Dispatch } from "react";
 import type { State } from "../../types/state.ts";
 import { Action } from "../../reducers/syncReducer.ts";
 import { RenderView } from "./RenderView.tsx";
-import { Block } from "../../lib/blocks/types";
+import { Block } from "../../lib/blocks/types.ts";
 
 interface RenderContainerProps {
     state: State;

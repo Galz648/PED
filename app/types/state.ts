@@ -1,4 +1,4 @@
-import { Block } from "./block.ts";
+import { Block } from "../lib/blocks/types.ts";
 
 type State = {
     editorContent: string;

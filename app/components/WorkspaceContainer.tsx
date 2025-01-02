@@ -1,15 +1,15 @@
 "use client"
 
 import React, { useReducer, useState, useEffect } from "react";
-import { EditorView } from "./EditorView.tsx";
-import { RenderView } from "./RenderView.tsx";
-import { ActionType, reducer } from "../reducers/stateReducer.ts";
-import { Block } from "../types/block.ts";
+import { EditorContainer } from "./editor/EditorContainer.tsx";
+import { RenderContainer } from "./render/RenderContainer.tsx";
+import { ActionType, reducer } from "../reducers/syncReducer.ts";
+import { Block } from "../lib/blocks/types.ts";
 import { State } from "../types/state.ts";
 import { useCookies } from "react-cookie";
 
 
-const EditorContainer = () => {
+const WorkspaceContainer = () => {
     const [cookies, setCookie] = useCookies(['workspace']);
 
 
@@ -37,7 +37,6 @@ const EditorContainer = () => {
     // when the state changes, update the editor content and the blocks
     useEffect(() => {
         console.log(state)
-        console.log("state changed")
     }, [state]);
 
     // TODO: move this to an appropriate style file
@@ -51,10 +50,10 @@ const EditorContainer = () => {
     return (
         <div className="editor-container"
             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <EditorView content={state.editorContent} state={state} dispatch={dispatch} style={paneStyle} id="editor-pane" />
-            <RenderView blocks={state.blocks} state={state} dispatch={dispatch} style={paneStyle} id="render-pane" />
+            <EditorContainer state={state} dispatch={dispatch} style={paneStyle} id="editor-pane" />
+            <RenderContainer state={state} dispatch={dispatch} style={paneStyle} id="render-pane" />
         </div>
     );
 };
 
-export default EditorContainer;
+export default WorkspaceContainer;

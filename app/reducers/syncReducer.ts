@@ -1,6 +1,6 @@
 import { State } from "../types/state.ts";
 import { Block } from "../lib/blocks/types.ts";
-import { parseEditor } from "../lib/editorParser.ts";
+import { createMarkdownBlock, parse } from "../lib/parser/textEditorParser.ts";
 
 export enum ActionType {
     UPDATE_EDITOR_CONTENT = "UPDATE_EDITOR_CONTENT",
@@ -15,12 +15,14 @@ export interface Action {
 export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case ActionType.UPDATE_EDITOR_CONTENT:
+            console.log("update editor content")
             const newContent = action.payload.newContent;
-            const blocks = parseEditor(newContent);
+            const blocks = parse(newContent);
+            
             return {
                 ...state,
                 editorContent: newContent,
-                blocks: blocks
+                blocks: blocks.map(block => createMarkdownBlock(block))
             };
         case ActionType.UPDATE_BLOCK:
             console.log("update block - not implemented")

@@ -1,10 +1,9 @@
 "use client"
 import MdView from "./mdView.tsx";
 import React, { Dispatch } from "react";
-import { BlockRenderVisitor } from "../lib/visitor.ts";
 import type { State } from "../../types/state.ts";
 import type { Action } from "../../reducers/syncReducer.ts";
-import type { Block } from "../types/block.ts";
+import type { Block } from "../../lib/blocks/types.ts";
 
 interface RenderViewProps {
   blocks: Block[];
@@ -36,7 +35,7 @@ export const RenderView = ({ blocks, state, dispatch, style, id }: RenderViewPro
     <div style={style} id={id}>
       {blocks.map((block, index) => (
         <div key={index}>
-          {block.accept(BlockRenderVisitor)}
+          <MdView content={block.content} />
         </div>
       ))}
     </div>

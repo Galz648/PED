@@ -27,6 +27,7 @@ export const EditorContainer = ({ state, dispatch, style, id }: EditorContainerP
     }, [monaco]);
 
     const handleEditorChange = (value: string | undefined, event: any) => {
+        console.log("calling reducer")
         if (value !== undefined) {
             dispatch({
                 type: ActionType.UPDATE_EDITOR_CONTENT,
@@ -36,6 +37,7 @@ export const EditorContainer = ({ state, dispatch, style, id }: EditorContainerP
     };
 
     const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+        console.log("editor did mount")
         // You can add any editor configuration here
         editor.focus();
     };
