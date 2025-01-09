@@ -17,7 +17,6 @@ export interface EditorContentUpdateAction {
 export interface RenderViewContentUpdateAction {
     type: ActionType.UPDATE_BLOCK;
     payload: {
-        id: string;
         newContent: string;
         oldContent: string;
     };
@@ -38,18 +37,19 @@ export const reducer = (state: State, action: Action): State => {
                 // blocks: blocks.map(block => createMarkdownBlock(block))
             };
         case ActionType.UPDATE_BLOCK:
-            console.log("update block")
-            // this consolidates the change made in the mathlive component with the state
-            const { id, newContent: blockNewContent, oldContent } = action.payload;
-            // a naive editing apporach: look for the exact string in the editorContent and replace it
-            const editorContent = state.editorContent;
-            const updatedContent = editorContent.replace(oldContent, blockNewContent);
-
-            return {
-                ...state,
-                editorContent: updatedContent
-            };
+            return updateBlock(state, action);
         default:
             return state;
     }
 }; 
+
+// TODO: the name of the function doesn't reflect the functionality of the function
+export const updateBlock = (state: State, action: RenderViewContentUpdateAction): State => {
+    const { newContent, oldContent } = action.payload;
+    const editorContent = state.editorContent;
+    const updatedContent = editorContent.replace(oldContent, newContent);
+    return {
+        ...state,
+        editorContent: updatedContent
+    };
+}
