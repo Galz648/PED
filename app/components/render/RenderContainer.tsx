@@ -1,10 +1,10 @@
 "use client"
-import React, { Dispatch } from "react";
+import React, { Dispatch, useEffect } from "react";
 import type { State } from "../../types/state.ts";
 import { Action } from "../../reducers/syncReducer.ts";
 import { RenderView } from "./RenderView.tsx";
 import { Block } from "../../lib/blocks/types.ts";
-
+import { v4 as uuidv4 } from 'uuid';
 interface RenderContainerProps {
     state: State;
     dispatch: Dispatch<Action>;
@@ -14,14 +14,17 @@ interface RenderContainerProps {
 export const RenderContainer = ({ state, dispatch, style, id }: RenderContainerProps) => {
     // Process blocks or any other logic here
     const blocks: Block[] = state.blocks;
-
+    useEffect(() => {
+        return () => {
+            console.log("unmounting RenderContainer")
+        }
+    }, [])
     return (
-        <RenderView
+        <RenderView key={"render-view"}
             // blocks={blocks}
             state={state}
             dispatch={dispatch}
             style={style}
-            id={id}
         />
     );
 }; 

@@ -27,6 +27,10 @@ const WorkspaceContainer = () => {
     // activate processing on initial load
     useEffect(() => {
         dispatch({ type: ActionType.UPDATE_EDITOR_CONTENT, payload: { newContent: editorContent } })
+
+        return () => {
+            console.log("unmounting WorkspaceContainer")
+        }
     }, []);
 
     useEffect(() => {

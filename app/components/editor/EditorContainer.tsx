@@ -43,7 +43,7 @@ export const EditorContainer = ({ state, dispatch, style, id }: EditorContainerP
     const handleEditorDidMount = (editor: any, monaco: Monaco) => {
         console.log("editor did mount")
         // You can add any editor configuration here
-        editor.focus();
+        // editor.focus(); // TODO: could be the source of the issue - focus is not working (mathlive container)
     };
 
     return (
@@ -53,7 +53,6 @@ export const EditorContainer = ({ state, dispatch, style, id }: EditorContainerP
             handleEditorChange={handleEditorChange}
             handleEditorDidMount={handleEditorDidMount}
             style={style}
-            id={id}
         />
     );
 }; 

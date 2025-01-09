@@ -12,9 +12,9 @@ interface EditorViewProps {
     id?: string;
 }
 
-export const EditorView = ({ content, state, handleEditorChange, handleEditorDidMount, style, id }: EditorViewProps) => {
+export const EditorView = ({ content, state, handleEditorChange, handleEditorDidMount, style }: EditorViewProps) => {
     return (
-        <div style={style} id={id}>
+        <div style={style}>
             <Editor
                 height="90vh"
                 defaultLanguage="latex"
