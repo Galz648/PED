@@ -4,7 +4,6 @@ import React, { useReducer, useState, useEffect } from "react";
 import { EditorContainer } from "./editor/EditorContainer.tsx";
 import { RenderContainer } from "./render/RenderContainer.tsx";
 import { ActionType, reducer } from "../reducers/syncReducer.ts";
-import { Block } from "../lib/blocks/types.ts";
 import { State } from "../types/state.ts";
 import { useCookies } from "react-cookie";
 
@@ -15,7 +14,6 @@ const WorkspaceContainer = () => {
 
     const initialState: State = {
         editorContent: cookies.workspace || "",
-        blocks: []
     }
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -31,13 +29,10 @@ const WorkspaceContainer = () => {
     useEffect(() => {
         console.log("setting cookie")
         setCookie('workspace', state.editorContent)
+        console.log(`cookie set: ${cookies.workspace}`)
     }, [state.editorContent]);
 
-    // when the state changes, update the editor content and the blocks
-    useEffect(() => {
-        console.log(state)
-    }, [state]);
-
+    
     // TODO: move this to an appropriate style file
     const paneStyle: React.CSSProperties = {
         width: '50%',
