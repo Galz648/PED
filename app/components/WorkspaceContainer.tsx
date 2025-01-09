@@ -17,7 +17,7 @@ const WorkspaceContainer = () => {
         editorContent: cookies.workspace || "",
         blocks: []
     }
-    // TODO: make this a reducer
+
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const [editorContent, setEditorContent] = useState(initialState.editorContent);
@@ -27,10 +27,6 @@ const WorkspaceContainer = () => {
     // activate processing on initial load
     useEffect(() => {
         dispatch({ type: ActionType.UPDATE_EDITOR_CONTENT, payload: { newContent: editorContent } })
-
-        return () => {
-            console.log("unmounting WorkspaceContainer")
-        }
     }, []);
 
     useEffect(() => {

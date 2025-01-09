@@ -34,7 +34,7 @@ function MathliveBlock({ content, dispatch, id }: { content: string, dispatch: D
     // @ts-ignore
     <math-field ref={mf} onInput={(evt) => {
       console.log(`onInput`)
-      dispatch({ type: ActionType.UPDATE_BLOCK, payload: { newContent: evt.target.value, oldContent: content } })
+      dispatch({ type: ActionType.UPDATE_BLOCK_CONTENT, payload: { newContent: evt.target.value, oldContent: content } })
     }}>
       {content}
       {/* @ts-ignore */}

@@ -14,14 +14,8 @@ interface RenderContainerProps {
 export const RenderContainer = ({ state, dispatch, style, id }: RenderContainerProps) => {
     // Process blocks or any other logic here
     const blocks: Block[] = state.blocks;
-    useEffect(() => {
-        return () => {
-            console.log("unmounting RenderContainer")
-        }
-    }, [])
     return (
         <RenderView key={"render-view"}
-            // blocks={blocks}
             state={state}
             dispatch={dispatch}
             style={style}

@@ -12,7 +12,7 @@ interface RenderViewProps {
   style?: React.CSSProperties;
 }
 
-export const RenderView = ({ state, dispatch, style}: RenderViewProps) => {
+export const RenderView = ({ state, dispatch, style }: RenderViewProps) => {
   const mdStyle = {
     backgroundColor: '#f0f0f0',
     padding: '10px',
@@ -29,17 +29,8 @@ export const RenderView = ({ state, dispatch, style}: RenderViewProps) => {
     margin: '10px'
   };
 
-  useEffect(() => {
-    return () => {
-      console.log("unmounting RenderView")
-    }
-  }, [])
-  // TODO: move the rendering logic to the RenderContainer
   return (
     <div style={style}>
-      {/* {blocks.map((block, index) => (
-        <div key={index}>
-          <MdView content={block.content} dispatch={dispatch} id={block.id.toString()} /> */}
       <MdView content={state.editorContent} dispatch={dispatch} />
     </div>
   );

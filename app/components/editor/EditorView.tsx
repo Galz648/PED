@@ -1,18 +1,16 @@
 "use client"
-import { Editor, Monaco } from "@monaco-editor/react";
+import { Editor } from "@monaco-editor/react";
 import React from "react";
 import type { State } from "../../types/state.ts"
 
 interface EditorViewProps {
-    content: string;
     state: State;
     handleEditorChange: (value: string | undefined, event: any) => void;
-    handleEditorDidMount: (editor: any, monaco: Monaco) => void;
     style?: React.CSSProperties;
     id?: string;
 }
 
-export const EditorView = ({ content, state, handleEditorChange, handleEditorDidMount, style }: EditorViewProps) => {
+export const EditorView = ({ state, handleEditorChange, style }: EditorViewProps) => {
     return (
         <div style={style}>
             <Editor
@@ -21,7 +19,6 @@ export const EditorView = ({ content, state, handleEditorChange, handleEditorDid
                 value={state.editorContent}
                 theme="vs-dark"
                 onChange={handleEditorChange}
-                onMount={handleEditorDidMount}
             />
         </div>
     );

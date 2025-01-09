@@ -1,10 +1,9 @@
 import { State } from "../types/state.ts";
 import { Block } from "../lib/blocks/types.ts";
-import { createMarkdownBlock, parse } from "../lib/parser/textEditorParser.ts";
 
 export enum ActionType {
     UPDATE_EDITOR_CONTENT = "UPDATE_EDITOR_CONTENT",
-    UPDATE_BLOCK = "UPDATE_BLOCK"
+    UPDATE_BLOCK_CONTENT = "UPDATE_BLOCK_CONTENT"
 }
 
 export interface EditorContentUpdateAction {
@@ -15,7 +14,7 @@ export interface EditorContentUpdateAction {
 }
 
 export interface RenderViewContentUpdateAction {
-    type: ActionType.UPDATE_BLOCK;
+    type: ActionType.UPDATE_BLOCK_CONTENT;
     payload: {
         newContent: string;
         oldContent: string;
@@ -36,15 +35,14 @@ export const reducer = (state: State, action: Action): State => {
                 editorContent: editorNewContent,
                 // blocks: blocks.map(block => createMarkdownBlock(block))
             };
-        case ActionType.UPDATE_BLOCK:
-            return updateBlock(state, action);
+        case ActionType.UPDATE_BLOCK_CONTENT:
+            return replaceEditorContent(state, action);
         default:
             return state;
     }
 }; 
 
-// TODO: the name of the function doesn't reflect the functionality of the function
-export const updateBlock = (state: State, action: RenderViewContentUpdateAction): State => {
+export const replaceEditorContent = (state: State, action: RenderViewContentUpdateAction): State => {
     const { newContent, oldContent } = action.payload;
     const editorContent = state.editorContent;
     const updatedContent = editorContent.replace(oldContent, newContent);

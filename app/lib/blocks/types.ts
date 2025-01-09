@@ -6,8 +6,7 @@ export type BlockType = 'latex' | 'markdown';
 
 
 export interface Block {
-    // TODO: consider keeping this as a single type
-    id: number | string;
+    id: string;
     type: BlockType;
     content: string;
 
