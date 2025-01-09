@@ -11,7 +11,7 @@ interface RenderContainerProps {
     style?: React.CSSProperties;
     id?: string;
 }
-export const RenderContainer = ({ state, dispatch, style, id }: RenderContainerProps) => {
+export const RenderContainer = ({ state, dispatch, style}: RenderContainerProps) => {
     // Process blocks or any other logic here
     const blocks: Block[] = state.blocks;
     return (

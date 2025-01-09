@@ -21,15 +21,6 @@ function MathliveBlock({ content, dispatch, id }: { content: string, dispatch: D
   // Customize the mathfield when it is mounted
   const mf = useRef<any>(null)
 
-  // log unmounting
-  useEffect(() => {
-    console.log(`mounting: ${id}`)
-    console.log(mf.current)
-    return () => {
-      console.log(`unmounting: ${id}`)
-    }
-  }, [])
-
   return (
     // @ts-ignore
     <math-field ref={mf} onInput={(evt) => {

@@ -4,6 +4,7 @@ import type { State } from "../../types/state.ts";
 import { Action, ActionType } from "../../reducers/syncReducer.ts";
 import { EditorView } from "./EditorView.tsx";
 import { useMonaco } from "@monaco-editor/react";
+import { Monaco } from "@monaco-editor/react";
 import { registerLatexLanguage } from "../../latex/syntax_highlight.ts";
 import { registerLatexSnippets } from "../../latex/snippets.ts";
 

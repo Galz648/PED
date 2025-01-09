@@ -20,8 +20,7 @@ const WorkspaceContainer = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const [editorContent, setEditorContent] = useState(initialState.editorContent);
-    const [blocks, setBlocks] = useState<Block[]>(initialState.blocks);
+    const [editorContent] = useState(initialState.editorContent);
 
 
     // activate processing on initial load
