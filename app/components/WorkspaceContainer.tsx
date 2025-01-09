@@ -44,11 +44,12 @@ const WorkspaceContainer = () => {
     }, [state]);
 
     // TODO: move this to an appropriate style file
-    const paneStyle = {
+    const paneStyle: React.CSSProperties = {
         width: '50%',
         height: '100%',
         border: '1px solid black',
-        padding: '10px'
+        padding: '10px',
+        overflow: 'auto'
     }
 
     return (
