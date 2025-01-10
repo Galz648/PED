@@ -9,9 +9,9 @@ import { Action } from "../../reducers/syncReducer.ts";
 
 const MdView = ({ content, style, dispatch }: { content: string, style?: React.CSSProperties, dispatch: Dispatch<Action> }) => {
 
-  const MathliveContainerCallback = useCallback(({ children }: { children: React.ReactNode }) => {
+  const MathliveContainerCallback = useCallback(({ children, id }: { children: React.ReactNode, id: string }) => {
     console.log("content", children?.toString())
-    return <MathliveContainer content={children?.toString() ?? ""} dispatch={dispatch} key={"stable-key-mathlive-container"} />
+    return <MathliveContainer content={children?.toString() ?? ""} dispatch={dispatch} id={id} key={"stable-key-mathlive-container"} />
   }, [])
 
   return (

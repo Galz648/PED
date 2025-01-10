@@ -23,14 +23,13 @@ function MathliveBlock({ content, dispatch }: { content: string, dispatch: Dispa
   // Customize the mathfield when it is mounted
   const mf = useRef<any>(null)
 
-
-  return ( // @ts-expect-error can't type this
+  return (
     <math-field ref={mf} onInput={(evt: any) => {
       console.log(`onInput`)
       dispatch({ type: ActionType.UPDATE_BLOCK_CONTENT, payload: { newContent: evt.target.value, oldContent: content } })
     }}>
       {content}
-      {/* @ts-expect-error  can't type this */}
+
     </math-field>
   )
 }
