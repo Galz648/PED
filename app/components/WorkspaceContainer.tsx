@@ -4,7 +4,7 @@ import { EditorContainer } from "./editor/EditorContainer.tsx";
 import { RenderContainer } from "./render/RenderContainer.tsx";
 import { ActionType, reducer } from "../reducers/syncReducer.ts";
 import { State } from "../types/state.ts";
-import ls, { get, set } from "local-storage";
+import { get, set } from "local-storage";
 import { LocalStorageKeys } from "../types/state.ts";
 
 const WorkspaceContainer = () => {
@@ -41,8 +41,8 @@ const WorkspaceContainer = () => {
     return (
         <div className="editor-container"
             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <EditorContainer state={state} dispatch={dispatch} style={paneStyle} id="editor-pane" />
-            <RenderContainer state={state} dispatch={dispatch} style={paneStyle} id="render-pane" />
+            <EditorContainer state={state} dispatch={dispatch} style={paneStyle} />
+            <RenderContainer state={state} dispatch={dispatch} style={paneStyle} />
         </div>
     );
 };

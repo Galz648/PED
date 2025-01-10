@@ -1,11 +1,13 @@
-import { State } from '../../types/state.ts';
+"use client"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Action, ActionType } from '../../reducers/syncReducer.ts';
-import { Block } from '../../lib/blocks/types.ts';
+
 import '../App.css'
 
 
 // import { MathfieldComponent } from "react-mathlive";
-import { useState, useRef, useEffect, Dispatch } from 'react'
+import { useRef, Dispatch } from 'react'
 import React from 'react'
 // declare global {
 //   namespace JSX {
@@ -13,22 +15,22 @@ import React from 'react'
 //       'math-field': React.DetailedHTMLProps<React.HTMLAttributes<any>, any>;
 //     }
 //   }
-// }
+// }`
 
 
 
-function MathliveBlock({ content, dispatch, id }: { content: string, dispatch: Dispatch<Action>, id: string }) {
+function MathliveBlock({ content, dispatch }: { content: string, dispatch: Dispatch<Action> }) {
   // Customize the mathfield when it is mounted
   const mf = useRef<any>(null)
 
-  return (
-    // @ts-ignore
-    <math-field ref={mf} onInput={(evt) => {
+
+  return ( // @ts-expect-error can't type this
+    <math-field ref={mf} onInput={(evt: any) => {
       console.log(`onInput`)
       dispatch({ type: ActionType.UPDATE_BLOCK_CONTENT, payload: { newContent: evt.target.value, oldContent: content } })
     }}>
       {content}
-      {/* @ts-ignore */}
+      {/* @ts-expect-error  can't type this */}
     </math-field>
   )
 }
