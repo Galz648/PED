@@ -41,8 +41,8 @@ const WorkspaceContainer = () => {
     return (
         <div className="editor-container"
             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <EditorContainer state={state} dispatch={dispatch} style={paneStyle} id="editor-pane" />
-            <RenderContainer state={state} dispatch={dispatch} style={paneStyle} id="render-pane" />
+            <EditorContainer state={state} dispatch={dispatch} style={paneStyle} />
+            <RenderContainer state={state} dispatch={dispatch} style={paneStyle} />
         </div>
     );
 };
