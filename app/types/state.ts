@@ -1,8 +1,13 @@
-import { Block } from "./block.ts";
 
 type State = {
     editorContent: string;
-    blocks: Block[];
 }
 
 export type { State };
+
+
+enum LocalStorageKeys {
+    workspace = 'workspace',
+}
+
+export { LocalStorageKeys };

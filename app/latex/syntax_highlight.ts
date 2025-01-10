@@ -2,7 +2,6 @@
 import type { Monaco } from "@monaco-editor/react";
 export function registerLatexLanguage(monaco: Monaco) {
     // Register LaTeX language
-    console.log("registering latex language")
     monaco.languages.register({ id: 'latex' });
 
     // Define LaTeX syntax highlighting rules
