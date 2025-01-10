@@ -4,7 +4,7 @@ import { EditorContainer } from "./editor/EditorContainer.tsx";
 import { RenderContainer } from "./render/RenderContainer.tsx";
 import { ActionType, reducer } from "../reducers/syncReducer.ts";
 import { State } from "../types/state.ts";
-import ls, { get, set } from "local-storage";
+import { get, set } from "local-storage";
 import { LocalStorageKeys } from "../types/state.ts";
 
 const WorkspaceContainer = () => {

@@ -5,7 +5,7 @@ import type { State } from "../../types/state.ts"
 
 interface EditorViewProps {
     state: State;
-    handleEditorChange: (value: string | undefined, event: any) => void;
+    handleEditorChange: (value: string | undefined, event: unknown) => void;
     style?: React.CSSProperties;
     id?: string;
 }

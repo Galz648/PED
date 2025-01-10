@@ -1,5 +1,4 @@
 import { State } from "../types/state.ts";
-import { Block } from "../lib/blocks/types.ts";
 
 export enum ActionType {
     UPDATE_EDITOR_CONTENT = "UPDATE_EDITOR_CONTENT",
@@ -26,21 +25,17 @@ export type Action = EditorContentUpdateAction | RenderViewContentUpdateAction;
 export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case ActionType.UPDATE_EDITOR_CONTENT:
-            console.log("update editor content")
-            const { newContent: editorNewContent } = action.payload;
-            // const blocks = parse(editorNewContent);
-            // console.log("blocks", blocks)
+            console.log("update editor content");
             return {
                 ...state,
-                editorContent: editorNewContent,
-                // blocks: blocks.map(block => createMarkdownBlock(block))
+                editorContent: action.payload.newContent
             };
         case ActionType.UPDATE_BLOCK_CONTENT:
             return replaceEditorContent(state, action);
         default:
             return state;
     }
-}; 
+};
 
 export const replaceEditorContent = (state: State, action: RenderViewContentUpdateAction): State => {
     const { newContent, oldContent } = action.payload;
