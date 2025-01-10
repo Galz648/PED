@@ -7,11 +7,10 @@ import WorkspaceContainer from './components/WorkspaceContainer.tsx';
 
 const Home: FC = () => {
     return (
-
-        // work around how to import mathlive
         <main>
-            <script defer src='https://unpkg.com/mathlive'></script>
-            < WorkspaceContainer/>
+            <script src={`https://unpkg.com/mathlive?module}`}></script>
+
+            < WorkspaceContainer />
         </main>
     );
 };

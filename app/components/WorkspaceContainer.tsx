@@ -1,38 +1,34 @@
 "use client"
-
 import React, { useReducer, useState, useEffect } from "react";
 import { EditorContainer } from "./editor/EditorContainer.tsx";
 import { RenderContainer } from "./render/RenderContainer.tsx";
 import { ActionType, reducer } from "../reducers/syncReducer.ts";
 import { State } from "../types/state.ts";
-import { useCookies } from "react-cookie";
-
+import ls, { get, set } from "local-storage";
+import { LocalStorageKeys } from "../types/state.ts";
 
 const WorkspaceContainer = () => {
-    const [cookies, setCookie] = useCookies(['workspace']);
-
 
     const initialState: State = {
-        editorContent: cookies.workspace || "",
+        editorContent: get<string>(LocalStorageKeys.workspace) || "",
     }
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const [editorContent] = useState(initialState.editorContent);
-
+    // TODO: this is a hack to get the editor content to update - determine a better way to handle this
+    const [editorContent] = useState(state.editorContent);
 
     // activate processing on initial load
     useEffect(() => {
-        dispatch({ type: ActionType.UPDATE_EDITOR_CONTENT, payload: { newContent: editorContent } })
+        dispatch({ type: ActionType.UPDATE_EDITOR_CONTENT, payload: { newContent: editorContent } }) // TODO: this is a hack to get the editor content to update - determine a better way to handle this
     }, []);
 
     useEffect(() => {
-        console.log("setting cookie")
-        setCookie('workspace', state.editorContent)
-        console.log(`cookie set: ${cookies.workspace}`)
+        console.log("setting localStorage")
+        set(LocalStorageKeys.workspace, state.editorContent);
+        console.log(`localStorage set: ${get<string>(LocalStorageKeys.workspace)}`)
     }, [state.editorContent]);
 
-    
     // TODO: move this to an appropriate style file
     const paneStyle: React.CSSProperties = {
         width: '50%',
