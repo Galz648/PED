@@ -1,8 +1,8 @@
 "use client"
 import MdView from "./mdView.tsx";
 import React, { Dispatch } from "react";
-import type { State } from "../../types/state.ts";
-import type { Action } from "../../reducers/syncReducer.ts";
+import type { State } from "../../app/types/state.ts";
+import type { Action } from "../../app/reducers/syncReducer.ts";
 
 interface RenderViewProps {
   state: State;

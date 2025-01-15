@@ -1,7 +1,7 @@
 "use client"
 import { Editor } from "@monaco-editor/react";
 import React from "react";
-import type { State } from "../../types/state.ts"
+import type { State } from "../../app/types/state.ts"
 
 interface EditorViewProps {
     state: State;

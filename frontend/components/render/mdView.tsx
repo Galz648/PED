@@ -5,7 +5,7 @@ import remarkMath from "remark-math";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import MathliveContainer from "./MathliveContainer.tsx";
-import { Action } from "../../reducers/syncReducer.ts";
+import { Action } from "../../app/reducers/syncReducer.ts";
 
 const MdView = ({ content, style, dispatch }: { content: string, style?: React.CSSProperties, dispatch: Dispatch<Action> }) => {
 

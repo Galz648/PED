@@ -1,7 +1,7 @@
 "use client"
 import React, { Dispatch } from "react";
-import type { State } from "../../types/state.ts";
-import { Action } from "../../reducers/syncReducer.ts";
+import type { State } from "../../app/types/state.ts";
+import { Action } from "../../app/reducers/syncReducer.ts";
 import { RenderView } from "./RenderView.tsx";
 
 interface RenderContainerProps {
@@ -10,7 +10,7 @@ interface RenderContainerProps {
     style?: React.CSSProperties;
     id?: string;
 }
-export const RenderContainer = ({ state, dispatch, style}: RenderContainerProps) => {
+export const RenderContainer = ({ state, dispatch, style }: RenderContainerProps) => {
     // Process blocks or any other logic here
     return (
         <RenderView key={"render-view"}

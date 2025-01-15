@@ -4,9 +4,9 @@
   "description": "An editor for solving physics homework",
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4000",
     "build": "eslint app && next build",
-    "start": "next start",
+    "start": "next start -p 4000",
     "lint": "eslint app"
   },
   "repository": {

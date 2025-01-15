@@ -2,10 +2,10 @@
 import React, { useReducer, useState, useEffect } from "react";
 import { EditorContainer } from "./editor/EditorContainer.tsx";
 import { RenderContainer } from "./render/RenderContainer.tsx";
-import { ActionType, reducer } from "../reducers/syncReducer.ts";
-import { State } from "../types/state.ts";
+import { ActionType, reducer } from "../app/reducers/syncReducer.ts";
+import { State } from "../app/types/state.ts";
 import { get, set } from "local-storage";
-import { LocalStorageKeys } from "../types/state.ts";
+import { LocalStorageKeys } from "../app/types/state.ts";
 
 const WorkspaceContainer = () => {
 

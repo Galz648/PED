@@ -1,7 +1,7 @@
 "use client"
 import React, { Dispatch, useEffect } from "react";
-import type { State } from "../../types/state.ts";
-import { Action, ActionType } from "../../reducers/syncReducer.ts";
+import type { State } from "../../app/types/state.ts";
+import { Action, ActionType } from "../../app/reducers/syncReducer.ts";
 import { EditorView } from "./EditorView.tsx";
 import { useMonaco } from "@monaco-editor/react";
 import { registerLatexLanguage } from "../../latex/syntax_highlight.ts";
