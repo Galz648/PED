@@ -1,15 +1,16 @@
 "use client"
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 
-const UserContext = createContext<string | null>(null);
+export const UserContext = createContext<string | null>(null);
 
-export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const userId = '123'; // Replace with actual logic to get user ID
-  return <UserContext.Provider value={userId}>{children}</UserContext.Provider>;
-};
+// export const UserProvider = ({ children }: { children: React.ReactNode }) => {
+//   // const userId = '123'; // TODO: Replace with actual logic to get user ID
+//   return <UserContext.Provider value="123">{children}</UserContext.Provider>;
+// };
 
 export const useUser = () => {
   const context = useContext(UserContext);
+  console.log(context);
   if (context === null) {
     throw new Error('useUser must be used within a UserProvider');
   }
