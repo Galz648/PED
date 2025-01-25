@@ -1,7 +1,7 @@
 "use client"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Action, ActionType } from '../../app/reducers/syncReducer.ts';
+import { Action, ActionType } from '../../reducers/syncReducer.ts';
 
 import '../App.css'
 

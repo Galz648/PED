@@ -1,7 +1,7 @@
 "use client"
 import React, { Dispatch } from "react";
-import type { State } from "../../app/types/state.ts";
-import { Action } from "../../app/reducers/syncReducer.ts";
+import type { State } from "../../types/state.ts";
+import { Action } from "../../reducers/syncReducer.ts";
 import { RenderView } from "./RenderView.tsx";
 
 interface RenderContainerProps {
