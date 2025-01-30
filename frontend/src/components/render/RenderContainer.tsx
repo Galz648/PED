@@ -10,7 +10,7 @@ interface RenderContainerProps {
     style?: React.CSSProperties;
     id?: string;
 }
-export const RenderContainer = ({ state, dispatch, style}: RenderContainerProps) => {
+export const RenderContainer = ({ state, dispatch, style }: RenderContainerProps) => {
     // Process blocks or any other logic here
     return (
         <RenderView key={"render-view"}

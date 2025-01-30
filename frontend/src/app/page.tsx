@@ -1,18 +1,11 @@
-"use client"
-
-import { FC } from 'react';
-// import { CounterContainer } from './components/CounterContainer';
 import React from 'react';
-import WorkspaceContainer from './components/WorkspaceContainer.tsx';
+import DocumentsPage from './documents/page.tsx';
 
-const Home: FC = () => {
+
+const App = () => {
     return (
-        <main>
-            <script src={`https://unpkg.com/mathlive?module}`}></script>
-
-            < WorkspaceContainer />
-        </main>
+        <DocumentsPage />
     );
 };
 
-export default Home; 
+export default App;

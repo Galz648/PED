@@ -31,6 +31,7 @@ export const reducer = (state: State, action: Action): State => {
                 editorContent: action.payload.newContent
             };
         case ActionType.UPDATE_BLOCK_CONTENT:
+            // TODO: change implementation to an immutable update
             return replaceEditorContent(state, action);
         default:
             return state;
